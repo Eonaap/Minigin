@@ -33,5 +33,7 @@ namespace kaas
 	private:
 		float m_MaxHealth, m_CurrentHealth;
 		bool m_IsAlive = true;
+
+
 	};
 }
