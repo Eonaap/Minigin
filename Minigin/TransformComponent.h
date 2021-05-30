@@ -1,9 +1,8 @@
 #include "BaseComponent.h"
 #pragma once
-#pragma warning(push)
 #pragma warning (disable:4201)
+#pragma warning (disable:4189)
 #include <glm/vec2.hpp>
-#pragma warning(pop)
 
 namespace kaas 
 {
@@ -19,5 +18,3 @@ namespace kaas
 		glm::vec2 m_Position;
 	};
 }
-
-

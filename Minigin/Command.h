@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include "GameObject.h"
+#include "Subject.h"
 
 namespace kaas
 {
@@ -7,36 +9,38 @@ namespace kaas
 	{
 	public:
 		virtual ~Command() = default;
-		virtual void Execute() = 0;
+		virtual void Execute(GameObject* gameObject) = 0;
 	};
 
 	class EmptyCommand : public Command
 	{
 	public:
-		void Execute() override { std::cout << "This button has no command assigned\n"; }
+		void Execute(GameObject* gameObject) override { UNREFERENCED_PARAMETER(gameObject); }
 	};
 
-	class JumpCommand : public Command
+	class LifeCommand : public Command
 	{
 	public:
-		void Execute() override { std::cout << "Jump!\n"; }
+		void Execute(GameObject* gameObject) override {
+			gameObject->GetSubject()->notify(*gameObject, Event::LoseLife);
+		}
 	};
 
 	class DuckCommand : public Command
 	{
 	public:
-		void Execute() override { std::cout << "Duck!\n"; }
+		void Execute(GameObject* gameObject) override { UNREFERENCED_PARAMETER(gameObject); }
 	};
 
 	class FireCommand : public Command
 	{
 	public:
-		void Execute() override { std::cout << "Fire!\n"; }
+		void Execute(GameObject* gameObject) override { UNREFERENCED_PARAMETER(gameObject); }
 	};
 
 	class ShieldCommand : public Command
 	{
 	public:
-		void Execute() override { std::cout << "Shield!\n"; }
+		void Execute(GameObject* gameObject) override { UNREFERENCED_PARAMETER(gameObject); }
 	};
 }

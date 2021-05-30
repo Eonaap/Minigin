@@ -3,9 +3,18 @@
 #include "BaseComponent.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "Subject.h"
+
+kaas::GameObject::GameObject()
+{
+	m_pSubject = new Subject();
+}
 
 kaas::GameObject::~GameObject()
 {
+	delete m_pSubject;
+	m_pSubject = nullptr;
+
 	for (kaas::BaseComponent* pComponent : m_pComponents)
 	{
 		delete pComponent;

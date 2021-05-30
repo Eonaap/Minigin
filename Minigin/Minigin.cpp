@@ -14,6 +14,8 @@
 #include "FPSComponent.h"
 #include "Scene.h"
 #include "Time.h"
+#include "Subject.h"
+#include "HealthComponent.h"
 #pragma once
 #pragma warning(push)
 #pragma warning (disable:4201)
@@ -93,12 +95,23 @@ void kaas::Minigin::LoadGame() const
 	go3->AddComponent(textComp1);
 	go3->AddComponent(FPSComp);
 	scene.Add(go3);
+
+	auto QBertObject = new GameObject{};
+	auto pFont2 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont2 };
+	pos.x = 25.0f;
+	pos.y = 100.0f;
+	TransformComponent* transComp3 = new TransformComponent{ QBertObject, pos };
+	QBertObject->AddComponent(transComp3);
+	QBertObject->AddComponent(textComp2);
+	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3.0f, QBertObject });
+	scene.Add(QBertObject);
+
+	InputManager::GetInstance().SetPlayerOne(QBertObject);
 }
 
 void kaas::Minigin::Cleanup()
 {
-
-
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;

@@ -1,13 +1,15 @@
+#include "MiniginPCH.h"
 #include "InputManager.h"
-#include <iostream>
-#include <string>
+#include <SDL.h>
+#include "Command.h"
 
 kaas::InputManager::InputManager()
 {
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonA, new JumpCommand{}, PressingState::buttonUp, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::ButtonA, new LifeCommand{}, PressingState::buttonUp, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonB, new DuckCommand{}, PressingState::buttonDown, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonX, new FireCommand{}, PressingState::buttonUp, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonY, new ShieldCommand{}, PressingState::buttonPressed, false });
+	m_pPlayerOne = nullptr;
 }
 
 kaas::InputManager::~InputManager()
@@ -19,21 +21,34 @@ kaas::InputManager::~InputManager()
 	}
 }
 
-void kaas::InputManager::ProcessInput()
+bool kaas::InputManager::ProcessInput()
 {
-	ZeroMemory(&m_pCurrentState, sizeof(XINPUT_STATE));
-	DWORD InputState = XInputGetState(0, &m_pCurrentState);
+	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
+	DWORD InputState = XInputGetState(0, &m_CurrentState);
 	if (InputState == ERROR_NOT_CONNECTED)
 		std::cout << "No controller found.\n";
 	else if (InputState != ERROR_SUCCESS)
 		std::cout << "Something went wrong with the input.\n";
+
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		if (e.type == SDL_QUIT) {
+			return false;
+		}
+		if (e.type == SDL_KEYDOWN) {
+
+		}
+		if (e.type == SDL_MOUSEBUTTONDOWN) {
+
+		}
+	}
 
 	for (ControllerAction& action : m_actions)
 	{
 		if (IsPressed(action.button))
 		{
 			if (CheckPressingState(action)) {
-				action.command->Execute();
+				action.command->Execute(m_pPlayerOne);
 			}
 
 			action.isDown = true;
@@ -41,11 +56,13 @@ void kaas::InputManager::ProcessInput()
 		else
 		{
 			if (action.state == PressingState::buttonUp && action.isDown)
-				action.command->Execute();
+				action.command->Execute(m_pPlayerOne);
 
 			action.isDown = false;
 		}
 	}
+
+	return true;
 }
 
 bool kaas::InputManager::IsPressed(ControllerButton button) const
@@ -53,21 +70,22 @@ bool kaas::InputManager::IsPressed(ControllerButton button) const
 	switch (button)
 	{
 	case kaas::ControllerButton::ButtonA:
-		if (m_pCurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_A)
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_A)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonB:
-		if (m_pCurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_B)
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_B)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonX:
-		if (m_pCurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_X)
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_X)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonY:
-		if (m_pCurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
 			return true;
 		break;
+	default: return false;
 	}
 	return false;
 }
@@ -87,4 +105,9 @@ bool kaas::InputManager::CheckPressingState(ControllerAction& button)
 		break;
 	}
 	return false;
+}
+
+void kaas::InputManager::SetPlayerOne(GameObject* pPlayerObject)
+{
+	m_pPlayerOne = pPlayerObject;
 }

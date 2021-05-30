@@ -1,18 +1,17 @@
 #pragma once
-#include <Windows.h>
 #include <XInput.h>
-#pragma comment(lib,"XInput.lib")
-#include <vector>
-#include "Command.h"
+#include "Singleton.h"
 namespace kaas
 {
+	class GameObject;
+	class Command;
+
 	enum class ControllerButton
 	{
 		ButtonA,
 		ButtonB,
 		ButtonX,
-		ButtonY,
-		//todo: add the other buttons
+		ButtonY
 	};
 
 	enum class PressingState
@@ -30,16 +29,19 @@ namespace kaas
 		bool isDown{};
 	};
 
-	class InputManager
+	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		InputManager();
 		~InputManager();
-		void ProcessInput();
-		bool CheckPressingState(ControllerAction& button);
+		bool ProcessInput();
 		bool IsPressed(ControllerButton button) const;
+		bool CheckPressingState(ControllerAction& button);
+		void SetPlayerOne(GameObject* pPlayerObject);
 	private:
-		XINPUT_STATE m_pCurrentState{};
+		XINPUT_STATE m_CurrentState{};
 		std::vector<ControllerAction> m_actions;
+		GameObject* m_pPlayerOne;
 	};
+
 }

@@ -4,6 +4,8 @@
 namespace kaas
 {
 	class BaseComponent;
+	class Subject;
+
 	class GameObject final
 	{
 	public:
@@ -14,8 +16,9 @@ namespace kaas
 
 		template<typename T>
 		T* GetComponent() const;
+		Subject* GetSubject() { return m_pSubject; };
 
-		GameObject() = default;
+		GameObject();
 		virtual ~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -24,6 +27,7 @@ namespace kaas
 
 	private:
 		std::vector<kaas::BaseComponent*> m_pComponents;
+		Subject* m_pSubject;
 	};
 
 	template<typename T>

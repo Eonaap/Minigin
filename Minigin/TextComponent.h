@@ -18,7 +18,6 @@ namespace kaas
 		std::string m_Text;
 		Font* m_pFont;
 		Texture2D* m_pTexture;
-		bool m_NeedsUpdate;
 	};
 }
 
