@@ -2,6 +2,8 @@
 #include <iostream>
 #include "GameObject.h"
 #include "Subject.h"
+#include "AudioLocator.h"
+#include "AudioBase.h"
 
 namespace kaas
 {
@@ -26,10 +28,13 @@ namespace kaas
 		}
 	};
 
-	class DuckCommand : public Command
+	class SoundCommand : public Command
 	{
 	public:
-		void Execute(GameObject* gameObject) override { UNREFERENCED_PARAMETER(gameObject); }
+		void Execute(GameObject* gameObject) override { 
+			AudioLocator::getAudio()->PlaySound(0);
+			UNREFERENCED_PARAMETER(gameObject); 
+		}
 	};
 
 	class FireCommand : public Command

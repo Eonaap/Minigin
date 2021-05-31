@@ -8,7 +8,7 @@ namespace kaas
 	class HealthComponent : public Observer
 	{
 	public:
-		HealthComponent(float maxHealth, GameObject* pPlayer)
+		HealthComponent(int maxHealth, GameObject* pPlayer)
 			:m_MaxHealth{maxHealth}
 			,m_CurrentHealth{ maxHealth }
 		{
@@ -26,7 +26,7 @@ namespace kaas
 				if (m_IsAlive) 
 				{
 					m_CurrentHealth--;
-					if (m_CurrentHealth > 0.0f)
+					if (m_CurrentHealth > 0)
 					{
 						m_pHealthText->SetText(std::to_string(m_CurrentHealth));
 					}
@@ -43,10 +43,10 @@ namespace kaas
 		};
 
 		const bool IsAlive() { return m_IsAlive; };
-		const float& GetHealth() { return m_CurrentHealth; };
+		const int& GetHealth() { return m_CurrentHealth; };
 
 	private:
-		float m_MaxHealth, m_CurrentHealth;
+		int m_MaxHealth, m_CurrentHealth;
 		bool m_IsAlive = true;
 		TextComponent* m_pHealthText;
 	};

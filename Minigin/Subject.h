@@ -8,7 +8,14 @@ namespace kaas
 	{
 	public:
 		Subject();
-
+		~Subject()
+		{
+			for (Observer* pObserver : m_pObservers)
+			{
+				delete pObserver;
+				pObserver = nullptr;
+			}
+		}
 		void notify(const GameObject& gameObject, const Event& eventInfo)
 		{
 			for (auto observer : m_pObservers)

@@ -16,6 +16,9 @@
 #include "Time.h"
 #include "Subject.h"
 #include "HealthComponent.h"
+#include "AudioLocator.h"
+#include "AudioManager.h"
+#include <SDL_mixer.h>
 #pragma once
 #pragma warning(push)
 #pragma warning (disable:4201)
@@ -27,9 +30,15 @@ using namespace std::chrono;
 
 void kaas::Minigin::Initialize()
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
+	}
+
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		throw std::runtime_error(std::string("SDL_Mixer Error: ") + Mix_GetError());
 	}
 
 	m_Window = SDL_CreateWindow(
@@ -40,6 +49,7 @@ void kaas::Minigin::Initialize()
 		480,
 		SDL_WINDOW_OPENGL
 	);
+
 	if (m_Window == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
@@ -104,10 +114,13 @@ void kaas::Minigin::LoadGame() const
 	TransformComponent* transComp3 = new TransformComponent{ QBertObject, pos };
 	QBertObject->AddComponent(transComp3);
 	QBertObject->AddComponent(textComp2);
-	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3.0f, QBertObject });
+	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
 	scene.Add(QBertObject);
 
 	InputManager::GetInstance().SetPlayerOne(QBertObject);
+
+	AudioLocator::provide(new AudioManager());
+	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
 }
 
 void kaas::Minigin::Cleanup()
@@ -116,6 +129,7 @@ void kaas::Minigin::Cleanup()
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
 	SDL_Quit();
+	Mix_Quit();
 }
 
 void kaas::Minigin::Run()

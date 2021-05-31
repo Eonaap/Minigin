@@ -6,7 +6,7 @@
 kaas::InputManager::InputManager()
 {
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonA, new LifeCommand{}, PressingState::buttonUp, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonB, new DuckCommand{}, PressingState::buttonDown, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::ButtonB, new SoundCommand{}, PressingState::buttonDown, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonX, new FireCommand{}, PressingState::buttonUp, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonY, new ShieldCommand{}, PressingState::buttonPressed, false });
 	m_pPlayerOne = nullptr;
