@@ -205,7 +205,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\3rdParty\SDL2_mixer\audio.h" />
     <ClInclude Include="AudioBase.h" />
     <ClInclude Include="AudioLocator.h" />
     <ClInclude Include="AudioManager.h" />
@@ -233,16 +232,6 @@
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\3rdParty\SDL2_mixer\audio.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TurnOffAllWarnings</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
-    </ClCompile>
     <ClCompile Include="AudioLocator.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="BaseComponent.cpp" />

@@ -1,52 +1,89 @@
 #include "MiniginPCH.h"
 #include "AudioManager.h"
+#include <cassert>
+
+int kaas::AudioManager::m_Head = 0;
+int kaas::AudioManager::m_Tail = 0;
+int kaas::AudioManager::m_NumPending = 0;
+std::vector<PlayMessage> kaas::AudioManager::m_PendingList = std::vector<PlayMessage>();
 
 kaas::AudioManager::AudioManager()
 {
-	// Initialize Simple-SDL2-Audio
-	initAudio();
-
-	//Load music
-	m_pMusicTest = Mix_LoadMUS("../Data/Music.wav");
-	if (m_pMusicTest == NULL)
+	m_PendingList.reserve(m_MaxRequests);
+	for (size_t i = 0; i < m_MaxRequests; i++)
 	{
-		printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+		m_PendingList.push_back(PlayMessage{});
 	}
+
 }
 
 kaas::AudioManager::~AudioManager()
 {
-	endAudio();
-
 	//Free the music
-	Mix_FreeMusic(m_pMusicTest);
-	m_pMusicTest = NULL;
+	for (AudioPiece music : m_pAudioList)
+	{
+		Mix_FreeChunk(music.audio);
+		music.audio = NULL;
+	}
 }
 
-void kaas::AudioManager::PlaySound(int soundID)
+void kaas::AudioManager::PlaySound(int soundID, int volume, int loops)
 {
-	// Play sound using console audio api...
-	UNREFERENCED_PARAMETER(soundID);
-	//playSound(m_AudioPaths[soundID].c_str(), SDL_MIX_MAXVOLUME);
-	playSoundFromMemory(m_AudioList[soundID], 128);
-
 	//Play the music
-	Mix_PlayMusic(m_pMusicTest, 0);
+	if (!m_pAudioList[soundID].playing) {
+
+		m_pAudioList[soundID].channel == 0 ? 
+			m_pAudioList[soundID].channel = Mix_PlayChannel(-1, m_pAudioList[soundID].audio, loops) 
+			: Mix_PlayChannel(m_pAudioList[soundID].channel, m_pAudioList[soundID].audio, loops);
+		
+		m_pAudioList[soundID].playing = true;
+
+		Mix_Volume(m_pAudioList[soundID].channel, volume);
+	}
 }
 
 void kaas::AudioManager::StopSound(int soundID)
 {
 	// Stop sound using console audio api...
 	UNREFERENCED_PARAMETER(soundID);
-}
-
-void kaas::AudioManager::StopAllSounds()
-{
-	// Stop all sounds using console audio api...
+	if (m_pAudioList[soundID].playing)
+	{
+		Mix_HaltChannel(soundID);
+		m_pAudioList[soundID].channel = 0;
+		m_pAudioList[soundID].playing = false;
+	}
 }
 
 void kaas::AudioManager::AddSound(std::string soundFilePath)
 {
-	//m_AudioPaths.emplace_back(std::move(soundFilePath));
-	m_AudioList.push_back(createAudio(soundFilePath.c_str(), 1, 128));
+	//Load music
+	Mix_Chunk* sound = Mix_LoadWAV(soundFilePath.c_str());
+	if (sound == NULL)
+	{
+		printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	m_pAudioList.push_back(AudioPiece{ sound, 0, false });
+}
+
+void kaas::AudioManager::Update()
+{
+	// If there are no pending requests, do nothing.
+	if (m_Head == m_Tail) return;
+
+	PlaySound(m_PendingList[m_Head].soundID, m_PendingList[m_Head].volume, m_PendingList[m_Head].loops);
+
+	m_Head = (m_Head + 1) % m_MaxRequests;
+}
+
+void kaas::AudioManager::AddRequest(int soundID, int volume, int loops)
+{
+	if ((m_Tail + 1) % m_MaxRequests == m_Head)
+		return;
+
+	// Add to the end of the list.
+	m_PendingList[m_Head].soundID = soundID;
+	m_PendingList[m_Head].volume = volume;
+	m_PendingList[m_Head].loops = loops;
+	m_Tail = (m_Tail + 1) % m_MaxRequests;
 }

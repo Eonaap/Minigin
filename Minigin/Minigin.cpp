@@ -41,6 +41,9 @@ void kaas::Minigin::Initialize()
 		throw std::runtime_error(std::string("SDL_Mixer Error: ") + Mix_GetError());
 	}
 
+	// allocate 16 mixing channels
+	Mix_AllocateChannels(160);
+
 	m_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_UNDEFINED,
@@ -121,6 +124,7 @@ void kaas::Minigin::LoadGame() const
 
 	AudioLocator::provide(new AudioManager());
 	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
+	AudioLocator::getAudio()->AddSound("../Data/DerpNugget.wav");
 }
 
 void kaas::Minigin::Cleanup()
@@ -155,6 +159,9 @@ void kaas::Minigin::Run()
 			Time::GetInstance().SetDeltaTime(duration<float>(currentTime - lastTime).count());
 			lastTime = currentTime;
 			
+			//Update the event queue of the audioLocator
+			AudioLocator::getAudio()->Update();
+
 			doContinue = input.ProcessInput();
 			sceneManager.Update();
 			renderer.Render();
