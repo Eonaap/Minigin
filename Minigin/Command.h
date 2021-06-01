@@ -44,7 +44,9 @@ namespace kaas
 	{
 	public:
 		void Execute(GameObject* gameObject) override {
-			AudioLocator::getAudio()->PlaySound(1, 69, 0);
+			AudioManager* manager = static_cast<AudioManager*>(AudioLocator::getAudio());
+			manager->AddRequest(1, 19, 0);
+			//AudioLocator::getAudio()->PlaySound(0, 19, 0);
 			UNREFERENCED_PARAMETER(gameObject);
 		}
 	};
