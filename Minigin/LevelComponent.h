@@ -30,9 +30,6 @@ namespace kaas
 		void Render() const override;
 
 		Tile& GetTile(int tileID);
-
-		//Ref for calculating row in numerical pyramid https://stackoverflow.com/questions/37513699/find-row-of-pyramid-based-on-index
-		//int row = int((-1 + sqrt(1 + 8 * i)) / 2);
 	private:
 		std::vector<Tile> m_pTiles;
 		Texture2D* m_pTexture;

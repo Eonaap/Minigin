@@ -7,8 +7,10 @@ kaas::InputManager::InputManager()
 {
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonA, new LifeCommand{}, PressingState::buttonUp, false });
 	m_actions.push_back(ControllerAction{ ControllerButton::ButtonB, new SoundCommand{}, PressingState::buttonDown, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonX, new FireCommand{}, PressingState::buttonUp, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonY, new ShieldCommand{}, PressingState::buttonPressed, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::ButtonX, new EmptyCommand{}, PressingState::buttonUp, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::ButtonY, new EmptyCommand{}, PressingState::buttonPressed, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::DPAD_UP, new EmptyCommand{}, PressingState::buttonPressed, false });
+	m_actions.push_back(ControllerAction{ ControllerButton::RightThumbStick, new MoveCommand{}, PressingState::ThumbStick, false });
 	m_pPlayerOne = nullptr;
 }
 
@@ -60,6 +62,24 @@ bool kaas::InputManager::ProcessInput()
 
 			action.isDown = false;
 		}
+
+		if (action.state == PressingState::ThumbStick)
+		{
+			float RX = m_CurrentState.Gamepad.sThumbRX;
+			float RY = m_CurrentState.Gamepad.sThumbRY;
+			float magnitude = sqrt(RX * RX + RY * RY);
+
+			if (magnitude > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE * 3)
+			{
+				//clip the magnitude at its expected maximum value
+				if (magnitude > 32767) magnitude = 32767;
+
+				//adjust magnitude relative to the end of the dead zone
+				magnitude -= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE * 3;
+
+				action.command->Execute(m_pPlayerOne, glm::vec2{ RX, RY });
+			}
+		}
 	}
 
 	return true;
@@ -84,6 +104,18 @@ bool kaas::InputManager::IsPressed(ControllerButton button) const
 	case kaas::ControllerButton::ButtonY:
 		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
 			return true;
+	case kaas::ControllerButton::DPAD_LEFT:
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT)
+			return true;
+	case kaas::ControllerButton::DPAD_RIGHT:
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT)
+			return true;
+	case kaas::ControllerButton::DPAD_UP:
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP)
+			return true;
+	case kaas::ControllerButton::DPAD_DOWN:
+		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN)
+			return true;
 		break;
 	default: return false;
 	}
@@ -102,6 +134,9 @@ bool kaas::InputManager::CheckPressingState(ControllerAction& button)
 		{
 			return true;
 		}
+		break;
+	case kaas::PressingState::ThumbStick:
+
 		break;
 	}
 	return false;

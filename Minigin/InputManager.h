@@ -11,14 +11,20 @@ namespace kaas
 		ButtonA,
 		ButtonB,
 		ButtonX,
-		ButtonY
+		ButtonY,
+		DPAD_LEFT,
+		DPAD_RIGHT,
+		DPAD_UP,
+		DPAD_DOWN,
+		RightThumbStick
 	};
 
 	enum class PressingState
 	{
 		buttonPressed,
 		buttonUp,
-		buttonDown
+		buttonDown,
+		ThumbStick
 	};
 
 	struct ControllerAction

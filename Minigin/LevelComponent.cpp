@@ -32,9 +32,21 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 	//Check if the data we got has an array
 	if (mainLevelBlocksLocation.IsArray())
 	{
+		bool changeColour{ false };
 		for (SizeType i = 0; i < mainLevelBlocksLocation.Size(); i++)
 		{
 			Tile tile{};
+			if (changeColour)
+			{
+				tile.tileState = TileStates::target;
+			}
+			else
+			{
+				tile.tileState = TileStates::standard;
+			}
+
+			changeColour = !changeColour;
+
 			tile.pos = { mainLevelBlocksLocation[i].GetArray()[0].GetInt(), mainLevelBlocksLocation[i].GetArray()[1].GetInt() };
 			tile.pos += m_StartLocation;
 			m_pTiles.push_back(tile);
@@ -72,4 +84,9 @@ void kaas::LevelComponent::Render() const
 
 		kaas::Renderer::GetInstance().RenderTexture(*m_pTexture, dst, rsc);
 	}
+}
+
+kaas::Tile& kaas::LevelComponent::GetTile(int tileID)
+{
+	return m_pTiles[tileID];
 }

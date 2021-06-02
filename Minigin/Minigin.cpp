@@ -17,6 +17,7 @@
 #include "Subject.h"
 #include "HealthComponent.h"
 #include "LevelComponent.h"
+#include "CharacterControllerComponent.h"
 #include "AudioLocator.h"
 #include "AudioManager.h"
 #include <SDL_mixer.h>
@@ -34,7 +35,6 @@ void kaas::Minigin::Initialize()
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	
-
 	//Initialize SDL_mixer
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 4, 2048) < 0)
 		std::cout << (std::string("SDL_Mixer Error: ") + Mix_GetError());
@@ -76,23 +76,10 @@ void kaas::Minigin::LoadGame() const
 	go->AddComponent(textureComp);
 	scene.Add(go);
 
-	//go = std::make_shared<GameObject>();
-	//go->SetTexture("logo.png");
-	//go->SetPosition(216, 180);
-	//scene.Add(go);
-	auto go1 = new GameObject{};
-	TextureComponent* textureComp1 = new TextureComponent{ go1, "logo.png" };
-	glm::vec2 pos{};
-	pos.x = 216.0f;
-	pos.y = 180.0f;
-	TransformComponent* transComp = new TransformComponent{ go1, pos };
-	go1->AddComponent(textureComp1);
-	go1->AddComponent(transComp);
-	scene.Add(go1);
-
 	auto go2 = new GameObject{};
 	auto pFont = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	TextComponent* textComp = new TextComponent{ go2, "Programming 4 Assignment", pFont };
+	glm::vec2 pos{};
 	pos.x = 80.0f;
 	pos.y = 20.0f;
 	TransformComponent* transComp1 = new TransformComponent{ go2, pos };
@@ -112,15 +99,29 @@ void kaas::Minigin::LoadGame() const
 	go3->AddComponent(FPSComp);
 	scene.Add(go3);
 
+
+	//Create the level object
+	auto LevelObject = new GameObject{};
+	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/TileScaled.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
+	LevelObject->AddComponent(pLevelComponent);
+	scene.Add(LevelObject);
+
+	//Create the player
 	auto QBertObject = new GameObject{};
 	auto pFont2 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont2 };
 	pos.x = 25.0f;
 	pos.y = 100.0f;
 	TransformComponent* transComp3 = new TransformComponent{ QBertObject, pos };
 	QBertObject->AddComponent(transComp3);
+	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont2 };
+
+	CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent };
+	TextureComponent* pCharacterTextureComp = new TextureComponent{QBertObject, "../Data/QBert.png"};
+	QBertObject->AddComponent(pCharacterController);
 	QBertObject->AddComponent(textComp2);
+	QBertObject->AddComponent(pCharacterTextureComp);
 	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
+
 	scene.Add(QBertObject);
 
 	//Put QBert as player one in the inputManager
@@ -130,12 +131,6 @@ void kaas::Minigin::LoadGame() const
 	AudioLocator::provide(new AudioManager());
 	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
 	AudioLocator::getAudio()->AddSound("../Data/DerpNugget.wav");
-
-	//Create the level object
-	auto LevelObject = new GameObject{};
-	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/TileScaled.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
-	LevelObject->AddComponent(pLevelComponent);
-	scene.Add(LevelObject);
 }
 
 void kaas::Minigin::Cleanup()

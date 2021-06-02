@@ -1,6 +1,9 @@
 #pragma once
 #include "BaseComponent.h"
-
+#pragma once
+#pragma warning (disable:4201)
+#pragma warning (disable:4189)
+#include "glm/vec2.hpp"
 namespace kaas 
 {
 	class Font;
@@ -18,6 +21,7 @@ namespace kaas
 		std::string m_Text;
 		Font* m_pFont;
 		Texture2D* m_pTexture;
+		glm::vec2 m_Pos;
 	};
 }
 

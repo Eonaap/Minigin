@@ -14,6 +14,7 @@ namespace kaas
 		void Render() const override;
 		glm::vec2 GetPosition() const;
 		void SetPosition(glm::vec2& pos);
+		void Move(glm::vec2& pos);
 	private:
 		glm::vec2 m_Position;
 	};

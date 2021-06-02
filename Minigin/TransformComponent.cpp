@@ -24,3 +24,8 @@ void kaas::TransformComponent::SetPosition(glm::vec2& pos)
 {
 	m_Position = pos;
 }
+
+void kaas::TransformComponent::Move(glm::vec2& pos)
+{
+	m_Position += pos;
+}

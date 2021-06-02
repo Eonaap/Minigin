@@ -12,7 +12,13 @@ kaas::TextComponent::TextComponent(GameObject* pGameObject, std::string text, Fo
 	:BaseComponent{pGameObject}
 	,m_Text{text}
 	,m_pFont{pFont}
+	,m_Pos{}
 {
+	TransformComponent* transform = m_pGameObject->GetComponent<TransformComponent>();
+	if (transform)
+	{
+		m_Pos = transform->GetPosition();
+	}
 }
 
 kaas::TextComponent::~TextComponent()
@@ -48,14 +54,7 @@ void kaas::TextComponent::Render() const
 {
 	if (m_pTexture != nullptr) 
 	{
-		TransformComponent* transform = m_pGameObject->GetComponent<TransformComponent>();
-
-		glm::vec2 pos{};
-
-		if (transform)
-			pos = transform->GetPosition();
-
-		Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
+		Renderer::GetInstance().RenderTexture(*m_pTexture, m_Pos.x, m_Pos.y);
 	}
 }
 

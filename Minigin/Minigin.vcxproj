@@ -210,6 +210,7 @@
     <ClInclude Include="AudioLocator.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="BaseComponent.h" />
+    <ClInclude Include="CharacterControllerComponent.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSComponent.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="AudioLocator.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
+    <ClCompile Include="CharacterControllerComponent.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
