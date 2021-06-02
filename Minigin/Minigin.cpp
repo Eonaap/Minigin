@@ -16,6 +16,7 @@
 #include "Time.h"
 #include "Subject.h"
 #include "HealthComponent.h"
+#include "LevelComponent.h"
 #include "AudioLocator.h"
 #include "AudioManager.h"
 #include <SDL_mixer.h>
@@ -122,11 +123,19 @@ void kaas::Minigin::LoadGame() const
 	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
 	scene.Add(QBertObject);
 
+	//Put QBert as player one in the inputManager
 	InputManager::GetInstance().SetPlayerOne(QBertObject);
 
+	//Create the audioManager in the audioLocator and add 2 sounds
 	AudioLocator::provide(new AudioManager());
 	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
 	AudioLocator::getAudio()->AddSound("../Data/DerpNugget.wav");
+
+	//Create the level object
+	auto LevelObject = new GameObject{};
+	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/TileScaled.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
+	LevelObject->AddComponent(pLevelComponent);
+	scene.Add(LevelObject);
 }
 
 void kaas::Minigin::Cleanup()

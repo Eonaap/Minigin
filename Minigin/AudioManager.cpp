@@ -14,7 +14,6 @@ kaas::AudioManager::AudioManager()
 	{
 		m_PendingList.push_back(PlayMessage{});
 	}
-
 }
 
 kaas::AudioManager::~AudioManager()
@@ -32,9 +31,8 @@ void kaas::AudioManager::PlaySound(int soundID, int volume, int loops)
 	//Play the music
 	if (!m_pAudioList[soundID].playing) {
 
-		m_pAudioList[soundID].channel == 0 ? 
-			m_pAudioList[soundID].channel = Mix_PlayChannel(-1, m_pAudioList[soundID].audio, loops) 
-			: Mix_PlayChannel(m_pAudioList[soundID].channel, m_pAudioList[soundID].audio, loops);
+		m_pAudioList[soundID].channel == 0 ? m_pAudioList[soundID].channel = Mix_PlayChannel(-1, m_pAudioList[soundID].audio, loops) 
+											: Mix_PlayChannel(m_pAudioList[soundID].channel, m_pAudioList[soundID].audio, loops);
 		
 		m_pAudioList[soundID].playing = true;
 

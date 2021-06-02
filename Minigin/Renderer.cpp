@@ -47,5 +47,11 @@ void kaas::Renderer::RenderTexture(const Texture2D& texture, const float x, cons
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
+
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+}
+
+void kaas::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect& dst, SDL_Rect& src) const
+{
+	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
 }
