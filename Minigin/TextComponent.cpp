@@ -16,9 +16,8 @@ kaas::TextComponent::TextComponent(GameObject* pGameObject, std::string text, Fo
 {
 	TransformComponent* transform = m_pGameObject->GetComponent<TransformComponent>();
 	if (transform)
-	{
 		m_Pos = transform->GetPosition();
-	}
+	
 }
 
 kaas::TextComponent::~TextComponent()

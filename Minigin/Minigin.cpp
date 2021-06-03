@@ -93,7 +93,7 @@ void kaas::Minigin::LoadGame() const
 	pos.x = 0.0f;
 	pos.y = 0.0f;
 	TransformComponent* transComp2 = new TransformComponent{ go3, pos };
-	FPSComponent* FPSComp = new FPSComponent{go3};
+	FPSComponent* FPSComp = new FPSComponent{ go3 };
 	go3->AddComponent(transComp2);
 	go3->AddComponent(textComp1);
 	go3->AddComponent(FPSComp);
@@ -102,18 +102,25 @@ void kaas::Minigin::LoadGame() const
 
 	//Create the level object
 	auto LevelObject = new GameObject{};
-	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/TileScaled.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
+	auto pFont2 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	pos.x = 25.0f;
+	pos.y = 50.0f;
+	TransformComponent* transComp3 = new TransformComponent{ LevelObject, pos };
+	LevelObject->AddComponent(transComp3);
+	TextComponent* pLevelTextComponent = new TextComponent{LevelObject, "Level 1", pFont2 };
+	LevelObject->AddComponent(pLevelTextComponent);
+	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/Tiles.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
 	LevelObject->AddComponent(pLevelComponent);
 	scene.Add(LevelObject);
 
 	//Create the player
 	auto QBertObject = new GameObject{};
-	auto pFont2 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto pFont3 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	pos.x = 25.0f;
 	pos.y = 100.0f;
-	TransformComponent* transComp3 = new TransformComponent{ QBertObject, pos };
-	QBertObject->AddComponent(transComp3);
-	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont2 };
+	TransformComponent* transComp4 = new TransformComponent{ QBertObject, pos };
+	QBertObject->AddComponent(transComp4);
+	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont3 };
 
 	CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent };
 	TextureComponent* pCharacterTextureComp = new TextureComponent{QBertObject, "../Data/QBert.png"};
@@ -150,7 +157,6 @@ void kaas::Minigin::Run()
 	ResourceManager::GetInstance().Init("../Data/");
 
 	LoadGame();
-
 	{
 		auto& renderer = Renderer::GetInstance();
 		auto& sceneManager = SceneManager::GetInstance();

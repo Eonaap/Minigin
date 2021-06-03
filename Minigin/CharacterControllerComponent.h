@@ -24,9 +24,10 @@ namespace kaas
 
 	private:
 		int m_CurrentTileID, m_CurrentTargetID, m_CurrentRow;
-		Tile m_TargetTile;
+		glm::vec2 m_TargetPos;
 		TransformComponent* m_pTransform;
 		LevelComponent* m_pLevel;
 		bool m_IsMoving;
+		float m_Offset, m_MovementSpeed;
 	};
 }

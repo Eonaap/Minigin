@@ -9,16 +9,23 @@ kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGa
 	,m_CurrentTileID{0}
 	,m_CurrentTargetID{-1}
 	,m_CurrentRow{1}
-	,m_TargetTile{ }
+	,m_TargetPos{ }
 	,m_pLevel{pLevel}
 	,m_IsMoving{false}
+	,m_Offset{15.0f}
+	,m_MovementSpeed{4.0f}
 {
 	m_pTransform = pGameObject->GetComponent<TransformComponent>();
 
 	if (!m_pTransform)
 		std::cout << "Failed to find TransformComponent on gameObject.\n";
 	else
-		m_pTransform->SetPosition(pLevel->GetTile(0).pos);
+	{
+		glm::vec2 pos = pLevel->GetTile(0).pos;
+		pos.x += m_Offset;
+		m_pTransform->SetPosition(pos);
+	}
+		
 }
 
 
@@ -28,14 +35,24 @@ void kaas::CharacterControllerComponent::Update()
 	{
 		glm::vec2 movement{};
 
-		movement = (m_pTransform->GetPosition() + (m_TargetTile.pos - m_pTransform->GetPosition()) * Time::GetInstance().GetDeltaTime() * 3.0f);
+		movement = (m_pTransform->GetPosition() + (m_TargetPos - m_pTransform->GetPosition()) * Time::GetInstance().GetDeltaTime() * m_MovementSpeed);
 
-		if (glm::length(m_TargetTile.pos - movement) < 5.0f)
+		if (glm::length(m_TargetPos - movement) < 3.0f)
 		{
-			m_pTransform->SetPosition(m_TargetTile.pos);
+			m_pTransform->SetPosition(m_TargetPos);
 			m_IsMoving = false;
 			m_CurrentTileID = m_CurrentTargetID;
-			std::cout << "Destination reached\n";
+			m_pLevel->SetTileState(m_CurrentTileID);
+
+			if (m_pLevel->GetLevelFinished())
+			{
+				m_TargetPos = m_pLevel->GetTile(0).pos;
+				m_TargetPos.x += m_Offset;
+				m_CurrentTargetID = 0;
+				m_CurrentRow = 1;
+				m_IsMoving = true;
+			}
+				
 		}
 		else
 		{
@@ -43,7 +60,7 @@ void kaas::CharacterControllerComponent::Update()
 		}
 	}
 
-	if (m_pTransform->GetPosition() == m_TargetTile.pos)
+	if (m_pTransform->GetPosition() == m_TargetPos)
 	{
 		m_IsMoving = false;
 	}
@@ -57,16 +74,16 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 
 		switch (direction)
 		{
-		case int(MovementDirections::topLeft):
+		case int(MovementDirections::topLeft) :
 			newTileID = m_CurrentTileID - m_CurrentRow;
 			break;
-		case int(MovementDirections::topRight):
+		case int(MovementDirections::topRight) :
 			newTileID = m_CurrentTileID - m_CurrentRow + 1;
 			break;
-		case int(MovementDirections::bottomLeft):
+		case int(MovementDirections::bottomLeft) :
 			newTileID = m_CurrentTileID + m_CurrentRow;
 			break;
-		case int(MovementDirections::bottomRight):
+		case int(MovementDirections::bottomRight) :
 			newTileID = m_CurrentTileID + m_CurrentRow + 1;
 			break;
 		}
@@ -80,14 +97,14 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		//Ref for calculating row in numerical pyramid https://stackoverflow.com/questions/37513699/find-row-of-pyramid-based-on-index
 		switch (direction)
 		{
-		case int(MovementDirections::topLeft) :
-			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
-				return;
-			break;
-		case int(MovementDirections::topRight) :
-			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
-				return;
-			break;
+			case int(MovementDirections::topLeft) :
+				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
+					return;
+				break;
+				case int(MovementDirections::topRight) :
+					if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
+						return;
+					break;
 		}
 
 		//Change the row according to the character going up or down
@@ -96,14 +113,12 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		else
 			m_CurrentRow--;
 
-		std::cout << newTileID << '\n';
-
 		m_CurrentTargetID = newTileID;
-		m_TargetTile = m_pLevel->GetTile(m_CurrentTargetID);
+		m_TargetPos = m_pLevel->GetTile(m_CurrentTargetID).pos;
 
 		//TilePos has an offset, put it to the middle of the tile
-		m_TargetTile.pos.x += 15.0f;
+		m_TargetPos.x += m_Offset;
 
 		m_IsMoving = true;
-	}
+	}	
 }

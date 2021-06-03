@@ -18,6 +18,8 @@ namespace kaas
 		virtual void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) = 0;
 	};
 
+
+	//Delete if you don't use it
 	class EmptyCommand : public Command
 	{
 	public:
@@ -41,7 +43,6 @@ namespace kaas
 		void Execute(GameObject* gameObject) override { 
 			AudioManager* manager = static_cast<AudioManager*>(AudioLocator::getAudio());
 			manager->AddRequest(0, 19, 0);
-			//AudioLocator::getAudio()->PlaySound(0, 19, 0);
 			UNREFERENCED_PARAMETER(gameObject); 
 		}
 
@@ -90,57 +91,5 @@ namespace kaas
 			}
 				
 		}
-	};
-
-	class MoveTopRightCommand : public Command
-	{
-	public:
-		void Execute(GameObject* gameObject) override 
-		{
-			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
-			if (temp)
-				temp->SetTarget(int(MovementDirections::topRight));
-		}
-
-		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
-	};
-
-	class MoveTopLeftCommand : public Command
-	{
-	public:
-		void Execute(GameObject* gameObject) override
-		{
-			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
-			if (temp)
-				temp->SetTarget(int(MovementDirections::topLeft));
-		}
-
-		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
-	};
-
-	class MoveBottomRightCommand : public Command
-	{
-	public:
-		void Execute(GameObject* gameObject) override
-		{
-			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
-			if (temp)
-				temp->SetTarget(int(MovementDirections::bottomRight));
-		}
-
-		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
-	};
-
-	class MoveBottomLeftCommand : public Command
-	{
-	public:
-		void Execute(GameObject* gameObject) override
-		{
-			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
-			if (temp)
-				temp->SetTarget(int(MovementDirections::bottomLeft));
-		}
-
-		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
 	};
 }
