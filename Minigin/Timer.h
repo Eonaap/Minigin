@@ -3,7 +3,7 @@
 
 namespace kaas 
 {
-	class Time : public Singleton<Time>
+	class Timer : public Singleton<Timer>
 	{
 	public:
 		float GetDeltaTime() const;

@@ -1,5 +1,6 @@
 #include "MiniginPCH.h"
 #include "AudioManager.h"
+#include <SDL_mixer.h>
 #include <cassert>
 
 int kaas::AudioManager::m_Head = 0;

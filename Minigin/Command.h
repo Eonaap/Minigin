@@ -6,7 +6,7 @@
 #include "AudioBase.h"
 #include "AudioManager.h"
 #include "CharacterControllerComponent.h"
-#include "glm/vec2.hpp"
+#include <glm.hpp>
 
 namespace kaas
 {

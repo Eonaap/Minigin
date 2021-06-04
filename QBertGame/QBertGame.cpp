@@ -1,8 +1,9 @@
-#include <Minigin.h>
+#include "QBertGamePCH.h"
+#include "QBert.h"
 
 int main()
 {
-    kaas::Minigin engine;
+    QBert engine;
     engine.Run();
     return 0;
 }

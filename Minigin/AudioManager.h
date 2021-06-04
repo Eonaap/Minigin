@@ -2,7 +2,8 @@
 #include "AudioBase.h"
 #include <vector>
 #include <string>
-#include <SDL_mixer.h>
+
+struct Mix_Chunk;
 
 struct AudioPiece
 {

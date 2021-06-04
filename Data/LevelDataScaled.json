@@ -1,12 +1,90 @@
 {
-	"mainLevelBlocksLocation": 
-	[
+	"mainLevelBlocksLocation": [
 		[ 0, 0 ],
-		[ -25, 40 ],[ 25, 40 ],
-		[ -50, 80 ],[ 0, 80 ],[ 50, 80 ],
-		[ -75, 120 ],[ -25, 120 ],[ 25, 120 ],[ 75, 120 ],
-		[ -100, 160 ],[ -50, 160 ],[ 0, 160 ],[ 50, 160 ],[ 100, 160 ],
-		[ -125, 200 ],[ -75, 200 ],[ -25, 200 ],[ 25, 200 ],[ 75, 200 ],[ 125, 200 ],
-		[ -150, 240 ],[ -100, 240 ],[ -50, 240 ],[ 0, 240 ],[ 50, 240 ],[ 100, 240 ],[ 150, 240 ]
+		[ -25, 40 ],
+		[ 25, 40 ],
+		[ -50, 80 ],
+		[ 0, 80 ],
+		[ 50, 80 ],
+		[ -75, 120 ],
+		[ -25, 120 ],
+		[ 25, 120 ],
+		[ 75, 120 ],
+		[ -100, 160 ],
+		[ -50, 160 ],
+		[ 0, 160 ],
+		[ 50, 160 ],
+		[ 100, 160 ],
+		[ -125, 200 ],
+		[ -75, 200 ],
+		[ -25, 200 ],
+		[ 25, 200 ],
+		[ 75, 200 ],
+		[ 125, 200 ],
+		[ -150, 240 ],
+		[ -100, 240 ],
+		[ -50, 240 ],
+		[ 0, 240 ],
+		[ 50, 240 ],
+		[ 100, 240 ],
+		[ 150, 240 ]
+	],
+	"flyingDiscs": [
+		{
+			"tileConnection": 0,
+			"IsLeft": true
+		},
+		{
+			"tileConnection": 0,
+			"IsLeft": false
+		},
+		{
+			"tileConnection": 1,
+			"IsLeft": true,
+			"level":  2
+		},
+		{
+			"tileConnection": 3,
+			"IsLeft": true,
+			"level": 1
+		},
+		{
+			"tileConnection": 6,
+			"IsLeft": true,
+			"level":  2
+		},
+		{
+			"tileConnection": 10,
+			"IsLeft": true,
+			"level" :  0
+		},
+		{
+			"tileConnection": 15,
+			"IsLeft": true
+		},
+		{
+			"tileConnection": 2,
+			"IsLeft": false
+		},
+		{
+			"tileConnection": 5,
+			"IsLeft": false,
+			"level":  2
+		},
+		{
+			"tileConnection": 9,
+			"IsLeft": false,
+			"level":  2
+		},
+		{
+			"tileConnection": 14,
+			"IsLeft": false,
+			"level" :  0
+		},
+		{
+			"tileConnection": 20,
+			"IsLeft": false,
+			"level":  1
+		}
 	]
 }

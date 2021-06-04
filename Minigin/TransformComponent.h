@@ -1,8 +1,8 @@
-#include "BaseComponent.h"
 #pragma once
+#include "BaseComponent.h"
 #pragma warning (disable:4201)
 #pragma warning (disable:4189)
-#include <glm/vec2.hpp>
+#include <glm.hpp>
 
 namespace kaas 
 {

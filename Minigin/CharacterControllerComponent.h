@@ -27,7 +27,7 @@ namespace kaas
 		glm::vec2 m_TargetPos;
 		TransformComponent* m_pTransform;
 		LevelComponent* m_pLevel;
-		bool m_IsMoving;
+		bool m_IsMoving, m_JumpedInVoid, m_TookDamage, m_IsOnDisc;
 		float m_Offset, m_MovementSpeed;
 	};
 }

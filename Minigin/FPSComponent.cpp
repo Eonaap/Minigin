@@ -1,6 +1,6 @@
 #include "MiniginPCH.h"
 #include "FPSComponent.h"
-#include "Time.h"
+#include "Timer.h"
 #include "TextComponent.h"
 
 kaas::FPSComponent::FPSComponent(GameObject* pGameObject)
@@ -10,7 +10,7 @@ kaas::FPSComponent::FPSComponent(GameObject* pGameObject)
 
 void kaas::FPSComponent::Update()
 {
-	m_ElapsedTime += Time::GetInstance().GetDeltaTime();
+	m_ElapsedTime += Timer::GetInstance().GetDeltaTime();
 
 	if (m_ElapsedTime > 1.0f) {
 		TextComponent* textComp = m_pGameObject->GetComponent<TextComponent>();
