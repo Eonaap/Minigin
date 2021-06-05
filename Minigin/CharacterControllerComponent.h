@@ -22,6 +22,7 @@ namespace kaas
 		
 		void SetTarget(int direction);
 
+		void SetTargetByID(int tileID);
 	private:
 		int m_CurrentTileID, m_CurrentTargetID, m_CurrentRow;
 		glm::vec2 m_TargetPos;

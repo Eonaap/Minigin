@@ -53,7 +53,7 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 			}
 		}
 
-		m_TilesLeft = m_pTiles.size();
+		m_TilesLeft = int(m_pTiles.size());
 	}
 
 	//Disc generation
@@ -85,7 +85,7 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 			}
 		}
 
-		m_TilesLeft = m_pTiles.size();
+		m_TilesLeft = int(m_pTiles.size());
 		m_DiscEndLocation = m_pTiles[0].pos - glm::vec2{ -m_DiscOffset.y, m_DiscOffset.x};
 	}
 }
@@ -154,9 +154,9 @@ void kaas::LevelComponent::Update()
 					if (m_LevelNumber < 2) 
 					{
 						m_LevelNumber++;
-						m_pLevelText->SetText("Level " + std::to_string(m_LevelNumber + 1));
+						//m_pLevelText->SetText("Level " + std::to_string(m_LevelNumber + 1));
 
-						m_TilesLeft = m_pTiles.size();
+						m_TilesLeft = int(m_pTiles.size());
 					}
 					else
 					{
@@ -254,7 +254,7 @@ void kaas::LevelComponent::SetTileState(int tileID)
 
 void kaas::LevelComponent::ResetScene()
 {
-	m_ResetTileCounter = m_pTiles.size() - 1;
+	m_ResetTileCounter = int(m_pTiles.size()) - 1;
 
 	//Multiply by 2 to give it a small delay
 	m_ResetTimer = m_OriginalResetTimer * 2;

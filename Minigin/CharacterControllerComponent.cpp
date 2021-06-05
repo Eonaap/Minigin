@@ -23,13 +23,10 @@ kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGa
 		std::cout << "Failed to find TransformComponent on gameObject.\n";
 	else
 	{
-		glm::vec2 pos = pLevel->GetTile(0).pos;
-		pos.x += m_Offset;
+		glm::vec2 pos = pLevel->GetTilePos(0);
 		m_pTransform->SetPosition(pos);
 	}
-		
 }
-
 
 void kaas::CharacterControllerComponent::Update()
 {
@@ -172,4 +169,13 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 
 		m_IsMoving = true;
 	}	
+}
+
+void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
+{
+	m_CurrentRow = int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2));
+	m_CurrentTargetID = tileID;
+	m_TargetPos = m_pLevel->GetTilePos(m_CurrentTargetID);
+
+	m_IsMoving = true;
 }
