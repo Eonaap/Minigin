@@ -73,23 +73,23 @@ void kaas::EnemyManagerComponent::Update()
 			case enemieTypes::Coily:
 				break;
 			case enemieTypes::SlickSam:
-				break;
-			case enemieTypes::UggWrongway:
 				GameObject* pGameObject = new GameObject{};
 				TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-				CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel };
+				CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
 				SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent };
 				m_EnemyObjects.push_back(pGameObject);
 				break;
+			case enemieTypes::UggWrongway:
+				break;
 			}
-
 			m_Enemies.erase(m_Enemies.begin());
 		}
 	}
 
 	for (GameObject* pGameObject : m_EnemyObjects)
 	{
-		pGameObject->Update();
+		if (pGameObject->GetActive())
+			pGameObject->Update();
 	}
 }
 
@@ -97,7 +97,8 @@ void kaas::EnemyManagerComponent::Render() const
 {
 	for (GameObject* pGameObject : m_EnemyObjects)
 	{
-		pGameObject->Render();
+		if (pGameObject->GetActive())
+			pGameObject->Render();
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "Subject.h"
 
 kaas::GameObject::GameObject()
+	:m_IsActive{true}
 {
 	m_pSubject = new Subject();
 }
@@ -41,4 +42,14 @@ void kaas::GameObject::Render() const
 void kaas::GameObject::AddComponent(BaseComponent* pComponent)
 {
 	m_pComponents.push_back(pComponent);
+}
+
+void kaas::GameObject::SetActive(bool isActive)
+{
+	m_IsActive = isActive;
+}
+
+bool kaas::GameObject::GetActive() const
+{
+	return m_IsActive;
 }

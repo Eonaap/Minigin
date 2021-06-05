@@ -12,6 +12,8 @@ namespace kaas
 		void Render() const;
 
 		void AddComponent(kaas::BaseComponent* pComponent);
+		void SetActive(bool isActive);
+		bool GetActive() const;
 
 		template<typename T>
 		T* GetComponent() const;
@@ -27,6 +29,7 @@ namespace kaas
 	private:
 		std::vector<kaas::BaseComponent*> m_pComponents;
 		Subject* m_pSubject;
+		bool m_IsActive;
 	};
 
 	template<typename T>

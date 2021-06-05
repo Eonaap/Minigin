@@ -8,6 +8,7 @@
 #include "../3rdParty/rapidjson/rapidjson.h"
 #include "../3rdParty/rapidjson/reader.h"
 #include "../3rdParty/rapidjson/document.h"
+#include "Structs.h"
 #include <fstream>
 #include <string>
 
@@ -211,38 +212,70 @@ kaas::Tile& kaas::LevelComponent::GetTile(int tileID)
 	return m_pTiles[tileID];
 }
 
-void kaas::LevelComponent::SetTileState(int tileID)
+void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 {
 	switch (m_LevelNumber)
 	{
 	case 0:
-		if (m_pTiles[tileID].tileState == TileStates::standard)
+		if (m_pTiles[tileID].tileState == TileStates::standard && tileAffection == TileAffection::always)
 		{
 			m_pTiles[tileID].tileState = TileStates::target;
 			m_TilesLeft--;
 		}
-		break;
-	case 1:
-		if (m_pTiles[tileID].tileState == TileStates::standard)
-			m_pTiles[tileID].tileState = TileStates::intermediate;
-
-		else if(m_pTiles[tileID].tileState == TileStates::intermediate)
-		{
-			m_pTiles[tileID].tileState = TileStates::target;
-			m_TilesLeft--;
-		}
-		break;
-	case 2:
-		if (m_pTiles[tileID].tileState == TileStates::standard) 
-		{
-			m_pTiles[tileID].tileState = TileStates::target;
-			m_TilesLeft--;
-		}	
-		else
+		if (m_pTiles[tileID].tileState == TileStates::target && tileAffection == TileAffection::onlyActive)
 		{
 			m_pTiles[tileID].tileState = TileStates::standard;
 			m_TilesLeft++;
-		}	
+		}
+		break;
+	case 1:
+
+		if (tileAffection == TileAffection::always)
+		{
+			if (m_pTiles[tileID].tileState == TileStates::standard)
+				m_pTiles[tileID].tileState = TileStates::intermediate;
+
+			else if (m_pTiles[tileID].tileState == TileStates::intermediate)
+			{
+				m_pTiles[tileID].tileState = TileStates::target;
+				m_TilesLeft--;
+			}
+		}
+		else if (tileAffection == TileAffection::onlyActive)
+		{
+			if (m_pTiles[tileID].tileState == TileStates::intermediate)
+				m_pTiles[tileID].tileState = TileStates::standard;
+
+			else if (m_pTiles[tileID].tileState == TileStates::target)
+			{
+				m_pTiles[tileID].tileState = TileStates::intermediate;
+				m_TilesLeft++;
+			}
+		}
+		
+		break;
+	case 2:
+		if (tileAffection == TileAffection::always)
+		{
+			if (m_pTiles[tileID].tileState == TileStates::target)
+			{
+				m_pTiles[tileID].tileState = TileStates::standard;
+				m_TilesLeft++;
+			}
+			else
+			{
+				m_pTiles[tileID].tileState = TileStates::target;
+				m_TilesLeft--;
+			}
+		}
+		else if (tileAffection == TileAffection::onlyActive)
+		{
+			if (m_pTiles[tileID].tileState == TileStates::target)
+			{
+				m_pTiles[tileID].tileState = TileStates::standard;
+				m_TilesLeft++;
+			}
+		}
 		break;
 	}
 
@@ -275,20 +308,32 @@ glm::vec2 kaas::LevelComponent::GetTilePos(int tileID)
 
 glm::vec2 kaas::LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
 {
-	glm::vec2 pos{ m_pTiles[tileID].pos };
-
-	//On the right side, add the offset instead of subtracting + teh offset from the pos being on the left side of the texture
-	pos.x = onLeftSide ? pos.x - m_DiscOffset.x : pos.x + m_DiscOffset.x + m_DiscOffset.y;
-	pos.y += m_DiscOffset.y;
-
-	for (const Disc& disc : m_pPossibleDiscLocations)
+	glm::vec2 pos{};
+	if (tileID <= m_pTiles.size()-1)
 	{
-		if (disc.tileConnectionID == tileID && disc.level == m_LevelNumber)
+		pos = m_pTiles[tileID].pos;
+
+		//On the right side, add the offset instead of subtracting + teh offset from the pos being on the left side of the texture
+		pos.x = onLeftSide ? pos.x - m_DiscOffset.x : pos.x + m_DiscOffset.x + m_DiscOffset.y;
+		pos.y += m_DiscOffset.y;
+
+		for (const Disc& disc : m_pPossibleDiscLocations)
 		{
-			pos = disc.pos;
+			if (disc.tileConnectionID == tileID && disc.level == m_LevelNumber)
+			{
+				pos = disc.pos;
+			}
 		}
+
 	}
-	
+	else
+	{
+		//Get the pos of the tileon the last row
+		pos = m_pTiles[tileID - 7].pos;
+		pos.x += m_DiscOffset.x;
+		pos.y += m_DiscOffset.y;
+	}
+
 	return pos;
 }
 

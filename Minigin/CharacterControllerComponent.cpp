@@ -5,7 +5,7 @@
 #include <glm.hpp>
 #include <math.h>
 
-kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGameObject, LevelComponent* pLevel)
+kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGameObject, LevelComponent* pLevel, TileAffection affectsTiles, bool diesByFall, bool canJumpOff)
 	:BaseComponent{ pGameObject }
 	,m_CurrentTileID{0}
 	,m_CurrentTargetID{-1}
@@ -14,6 +14,9 @@ kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGa
 	,m_pLevel{pLevel}
 	,m_IsMoving{false}
 	,m_JumpedInVoid{false}
+	,m_CanJumpOff{ canJumpOff }
+	,m_TileAffection{affectsTiles}
+	,m_DiesByFall{diesByFall}
 	,m_Offset{15.0f}
 	,m_MovementSpeed{4.0f}
 {
@@ -42,10 +45,11 @@ void kaas::CharacterControllerComponent::Update()
 
 			if (!m_JumpedInVoid)
 			{
-				
 				m_IsMoving = false;
 				m_CurrentTileID = m_CurrentTargetID;
-				m_pLevel->SetTileState(m_CurrentTileID);
+
+				if (m_TileAffection != TileAffection::nothing)
+					m_pLevel->SetTileState(m_CurrentTileID, m_TileAffection);
 
 				if (m_pLevel->GetLevelFinished())
 				{
@@ -57,6 +61,13 @@ void kaas::CharacterControllerComponent::Update()
 			}
 			else
 			{
+				if (m_DiesByFall)
+				{
+					KillCharacter();
+					return;
+				}
+
+
 				if (!m_IsOnDisc)
 				{
 					if (m_pLevel->IsOnDisc(m_pTransform->GetPosition()))
@@ -125,26 +136,29 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 			break;
 		}
 
-		if (newTileID < 0 || newTileID > 27)
-			return;
-
 		//to prevent the player to go from one side of the pyramid to the other
 		//if going from the left side to top left dir, the previous tile needs to be on the same row
 		//if going from the right side to top right dir, the next tile needs to be on the same row
 		//Ref for calculating row in numerical pyramid https://stackoverflow.com/questions/37513699/find-row-of-pyramid-based-on-index
 		switch (direction)
 		{
-			case int(MovementDirections::topLeft) :
-				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
+		case int(MovementDirections::topLeft) :
+			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
+			{
+				if (m_CanJumpOff)
 				{
 					m_TargetPos = m_pLevel->GetVoidPos(m_CurrentTileID - m_CurrentRow + 1, true);
 					m_IsMoving = true;
 					m_JumpedInVoid = true;
-					return;
 				}
-				break;
-			case int(MovementDirections::topRight) :
-				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
+				
+				return;
+			}
+			break;
+		case int(MovementDirections::topRight) :
+			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
+			{
+				if (m_CanJumpOff)
 				{
 					int correctID = m_CurrentTileID - m_CurrentRow;
 					if (correctID < 0)
@@ -153,10 +167,44 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
 					m_IsMoving = true;
 					m_JumpedInVoid = true;
-					return;
 				}
-				break;
+				return;
+			}
+			break;
+		case int(MovementDirections::bottomLeft) :
+			if (m_CurrentRow == 7)
+			{
+				if (m_CanJumpOff)
+				{
+					int correctID = m_CurrentTileID + m_CurrentRow - 1;
+					if (correctID < 0)
+						correctID = 0;
+
+					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
+					m_IsMoving = true;
+					m_JumpedInVoid = true;
+				}
+			}
+		break;
+		case int(MovementDirections::bottomRight) :
+			if (m_CurrentRow == 7)
+			{
+				if (m_CanJumpOff)
+				{
+					int correctID = m_CurrentTileID + m_CurrentRow;
+					if (correctID < 0)
+						correctID = 0;
+
+					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
+					m_IsMoving = true;
+					m_JumpedInVoid = true;
+				}
+			}
+			break;
 		}
+
+		if (newTileID < 0 || newTileID > 27)
+			return;
 
 		//Change the row according to the character going up or down
 		if (m_CurrentTargetID < newTileID)
@@ -173,9 +221,14 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 
 void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
 {
-	m_CurrentRow = int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2));
 	m_CurrentTargetID = tileID;
+	m_CurrentRow = int(ceil((-1 + sqrt(1 + 8 * (tileID + 1))) / 2));
 	m_TargetPos = m_pLevel->GetTilePos(m_CurrentTargetID);
 
 	m_IsMoving = true;
+}
+
+void kaas::CharacterControllerComponent::KillCharacter()
+{
+	m_pGameObject->SetActive(false);
 }

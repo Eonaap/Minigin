@@ -26,7 +26,8 @@ void Scene::Update()
 {
 	for(auto& object : m_pObjects)
 	{
-		object->Update();
+		if (object->GetActive())
+			object->Update();
 	}
 }
 
@@ -34,7 +35,8 @@ void Scene::Render() const
 {
 	for (const auto& object : m_pObjects)
 	{
-		object->Render();
+		if (object->GetActive())
+			object->Render();
 	}
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
+#include "Structs.h"
 #include <vector>
 #pragma warning (disable:4201)
 #pragma warning (disable:4189)
@@ -9,27 +10,7 @@ namespace kaas
 {
 	class Texture2D;
 
-	enum class TileStates
-	{
-		standard,
-		target,
-		intermediate
-	};
-
-	struct Tile 
-	{
-		glm::vec2 pos;
-		TileStates tileState = TileStates{ TileStates::standard};
-	};
-
-	struct Disc
-	{
-		glm::vec2 pos;
-		bool InUse;
-		int tileConnectionID;
-		int level = -1;
-	};
-
+	class CharacterControllerComponent;
 	class TextureComponent;
 	class TextComponent;
 	class LevelComponent : public BaseComponent
@@ -49,7 +30,7 @@ namespace kaas
 
 		bool IsOnDisc(glm::vec2 pos);
 
-		void SetTileState(int tileID);
+		void SetTileState(int tileID, TileAffection tileAffection);
 		bool GetLevelFinished();
 
 	private:

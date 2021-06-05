@@ -61,7 +61,7 @@ void QBert::SetupScene() const
 	TransformComponent* transComp4 = new TransformComponent{ QBertObject, pos };
 	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont3 };
 
-	CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent };
+	CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent, TileAffection::always};
 	TextureComponent* pCharacterTextureComp = new TextureComponent{ QBertObject, "../Data/QBert.png" };
 	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
 
