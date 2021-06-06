@@ -40,3 +40,8 @@ void Scene::Render() const
 	}
 }
 
+std::string kaas::Scene::GetName() const
+{
+	return m_Name;
+}
+

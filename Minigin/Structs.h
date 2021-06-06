@@ -1,8 +1,11 @@
 #pragma once
 #include "MiniginPCH.h"
+#include <SDL.h>
 
 namespace kaas 
 {
+	class Command;
+
 	enum class TileStates
 	{
 		standard,
@@ -24,6 +27,14 @@ namespace kaas
 		int level = -1;
 	};
 
+	struct Rect 
+	{
+		int x;
+		int y;
+		int w;
+		int h;
+	};
+
 	enum class MovementDirections
 	{
 		topLeft,
@@ -39,5 +50,35 @@ namespace kaas
 		nothing,
 		always,
 		onlyActive
+	};
+
+	enum class ControllerButton
+	{
+		ButtonA,
+		ButtonB,
+		ButtonX,
+		ButtonY,
+		DPAD_LEFT,
+		DPAD_RIGHT,
+		DPAD_UP,
+		DPAD_DOWN,
+		RightThumbStick
+	};
+
+	enum class PressingState
+	{
+		buttonPressed,
+		buttonUp,
+		buttonDown,
+		ThumbStick
+	};
+
+	struct ControllerAction
+	{
+		ControllerButton button{};
+		SDL_KeyCode keyboardButton{};
+		Command* command{};
+		PressingState state{};
+		bool isDown{};
 	};
 }

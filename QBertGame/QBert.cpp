@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "EnemyManagerComponent.h"
 #include "Components.h"
+#include "Command.h"
 #pragma warning (disable:4201)
 #pragma warning (disable:4189)
 #include <glm.hpp>
@@ -27,7 +28,7 @@ void QBert::SetupInput() const
 
 void QBert::SetupScene() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = SceneManager::GetInstance().CreateScene("SingleMode");
 
 	auto go = new GameObject{};
 	TextureComponent* textureComp = new TextureComponent{ go, "background.jpg" };
@@ -63,7 +64,9 @@ void QBert::SetupScene() const
 	CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent, TileAffection::always};
 	TextureComponent* pCharacterTextureComp = new TextureComponent{ QBertObject, "../Data/QBert.png" };
 	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
+	InputComponent* pInputComponent = new InputComponent{QBertObject};
 
+	pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_BACKQUOTE,new MoveCommand{}, PressingState::ThumbStick, false });
 	scene.Add(QBertObject);
 
 	EnemyManagerComponent* pEnemyManagerComponent = new EnemyManagerComponent{ LevelObject, "../Data/EnemiesData.json", pCharacterController };
@@ -75,4 +78,25 @@ void QBert::SetupScene() const
 	AudioLocator::provide(new AudioManager());
 	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
 	AudioLocator::getAudio()->AddSound("../Data/DerpNugget.wav");
+
+	//Create Main menu scene
+	{
+		Scene& Startscene = SceneManager::GetInstance().CreateScene("MainMenu");
+
+		//StartScreen
+		GameObject* pStartScreen = new GameObject();
+		TextureComponent* pStartScreenTexture = new TextureComponent{ pStartScreen, "../Data/StartScreen.png" };
+		//pStartScreenTexture->ChangeSize(640.0f, 480.0f);
+
+		//Background
+		GameObject* pBackground = new GameObject();
+		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackground, "../Data/MainMenu.png" };
+		//pBackgroundTexture->ChangeSize(640.0f, 480.0f);
+		MainMenuComponent* pMainMenuComponent = new MainMenuComponent{ pBackground };
+
+		Startscene.Add(pStartScreen);
+		Startscene.Add(pBackground);
+
+		SceneManager::GetInstance().SetActiveScene("SingleMode");
+	}
 }

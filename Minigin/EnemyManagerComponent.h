@@ -27,7 +27,7 @@ namespace kaas
 		void Update() override;
 		void Render() const override;
 		void NextLevel();
-
+		void ResetEnemies();
 	private:
 		LevelComponent* m_pLevel;
 		std::vector<EnemieData> m_Enemies;

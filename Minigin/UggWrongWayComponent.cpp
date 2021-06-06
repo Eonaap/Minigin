@@ -1,13 +1,16 @@
 #include "MiniginPCH.h"
 #include "UggWrongWayComponent.h"
 #include "CharacterControllerComponent.h"
+#include "EnemyManagerComponent.h"
 #include "TextureComponent.h"
 #include <stdlib.h>
 #include <time.h>
 
-kaas::UggWrongWayComponent::UggWrongWayComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent)
+kaas::UggWrongWayComponent::UggWrongWayComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager)
 	:BaseComponent{ pGameObject }
 	, m_pController{ pControllerComponent }
+	,m_pPlayerController{pPlayerController}
+	,m_pEnemyManager{pEnemyManager}
 {
 	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/Ugg.png" };
 
@@ -25,11 +28,16 @@ kaas::UggWrongWayComponent::UggWrongWayComponent(GameObject* pGameObject, Charac
 		m_pController->SetTargetByID(27);
 		m_GoesToLeftSide = true;
 	}
-
 }
 
 void kaas::UggWrongWayComponent::Update()
 {
+	if (m_pController->GetCurrentID() == m_pPlayerController->GetCurrentID())
+	{
+		m_pPlayerController->LoseLife();
+		m_pEnemyManager->ResetEnemies();
+	}
+
 	int random = rand() % 2;
 
 	if (m_GoesToLeftSide)

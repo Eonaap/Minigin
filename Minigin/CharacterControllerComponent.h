@@ -17,6 +17,7 @@ namespace kaas
 		void SetTargetByID(int tileID);
 
 		void KillCharacter();
+		void LoseLife();
 
 		int GetCurrentRow() const;
 		int GetCurrentID() const;

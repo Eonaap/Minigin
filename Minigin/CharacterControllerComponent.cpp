@@ -81,7 +81,7 @@ void kaas::CharacterControllerComponent::Update()
 					else
 					{
 						//Add call to observer for death
-						m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::LoseLife);
+						LoseLife();
 						m_TookDamage = true;
 						m_TargetPos = m_pLevel->GetTilePos(0);
 						m_CurrentTargetID = 0;
@@ -282,6 +282,11 @@ void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
 void kaas::CharacterControllerComponent::KillCharacter()
 {
 	m_pGameObject->SetActive(false);
+}
+
+void kaas::CharacterControllerComponent::LoseLife()
+{
+	m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::LoseLife);
 }
 
 int kaas::CharacterControllerComponent::GetCurrentRow() const

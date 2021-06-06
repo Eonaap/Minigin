@@ -3,7 +3,7 @@ namespace kaas
 {
 	class GameObject;
 
-	enum Event {
+	enum class Event {
 		LoseLife
 	};
 

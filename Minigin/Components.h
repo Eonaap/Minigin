@@ -4,4 +4,6 @@
 #include "TransformComponent.h"
 #include "LevelComponent.h"
 #include "CharacterControllerComponent.h"
+#include "MainMenuComponent.h"
+#include "InputComponent.h"
 

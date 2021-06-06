@@ -1,17 +1,13 @@
 #include "MiniginPCH.h"
 #include "InputManager.h"
-#include <SDL.h>
 #include "Command.h"
 
 kaas::InputManager::InputManager()
 {
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonA, new LifeCommand{}, PressingState::buttonUp, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonB, new SoundCommand{}, PressingState::buttonDown, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonX, new EmptyCommand{}, PressingState::buttonUp, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::ButtonY, new EmptyCommand{}, PressingState::buttonPressed, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::DPAD_UP, new EmptyCommand{}, PressingState::buttonPressed, false });
-	m_actions.push_back(ControllerAction{ ControllerButton::RightThumbStick, new MoveCommand{}, PressingState::ThumbStick, false });
-	m_pPlayerOne = nullptr;
+	for (int i = 0; i < 322; i++) { // init them all to false
+		m_Keys[i] = false;
+		m_KeysPreviousUpdate[i] = false;
+	}
 }
 
 kaas::InputManager::~InputManager()
@@ -37,52 +33,40 @@ bool kaas::InputManager::ProcessInput()
 		if (e.type == SDL_QUIT) {
 			return false;
 		}
+		if (e.type == SDL_KEYUP) {
+			m_Keys[e.key.keysym.sym] = false;
+			m_KeysPreviousUpdate[e.key.keysym.sym] = false;
+		}
 		if (e.type == SDL_KEYDOWN) {
-
+			m_Keys[e.key.keysym.sym] = true;
 		}
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
 
 		}
 	}
 
-	for (ControllerAction& action : m_actions)
+	return true;
+}
+
+bool kaas::InputManager::ProcessControllerButton(ControllerAction& button)
+{
+	if (IsPressed(button.button))
 	{
-		if (IsPressed(action.button))
-		{
-			if (CheckPressingState(action)) {
-				action.command->Execute(m_pPlayerOne);
-			}
-
-			action.isDown = true;
-		}
-		else
-		{
-			if (action.state == PressingState::buttonUp && action.isDown)
-				action.command->Execute(m_pPlayerOne);
-
-			action.isDown = false;
+		if (CheckPressingState(button)) {
+			return true;
 		}
 
-		if (action.state == PressingState::ThumbStick)
-		{
-			float RX = m_CurrentState.Gamepad.sThumbRX;
-			float RY = m_CurrentState.Gamepad.sThumbRY;
-			float magnitude = sqrt(RX * RX + RY * RY);
+		button.isDown = true;
+	}
+	else
+	{
+		if (button.state == PressingState::buttonUp && button.isDown)
+			return true;
 
-			if (magnitude > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE * 3)
-			{
-				//clip the magnitude at its expected maximum value
-				if (magnitude > 32767) magnitude = 32767;
-
-				//adjust magnitude relative to the end of the dead zone
-				magnitude -= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE * 3;
-
-				action.command->Execute(m_pPlayerOne, glm::vec2{ RX, RY });
-			}
-		}
+		button.isDown = false;
 	}
 
-	return true;
+	return false;
 }
 
 bool kaas::InputManager::IsPressed(ControllerButton button) const
@@ -144,5 +128,24 @@ bool kaas::InputManager::CheckPressingState(ControllerAction& button)
 
 void kaas::InputManager::SetPlayerOne(GameObject* pPlayerObject)
 {
-	m_pPlayerOne = pPlayerObject;
+	UNREFERENCED_PARAMETER(pPlayerObject);
+	//m_pPlayerOne = pPlayerObject;
+}
+
+bool kaas::InputManager::KeyIsPressed(SDL_KeyCode scanCode)
+{
+	if (m_Keys[scanCode] && m_KeysPreviousUpdate[scanCode] == false)
+	{
+		m_KeysPreviousUpdate[scanCode] = true;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+XINPUT_STATE kaas::InputManager::GetCurrentState() const
+{
+	return m_CurrentState;
 }

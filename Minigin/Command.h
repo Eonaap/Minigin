@@ -8,6 +8,7 @@
 #include "CharacterControllerComponent.h"
 #include <glm.hpp>
 
+
 namespace kaas
 {
 	class Command
@@ -17,7 +18,6 @@ namespace kaas
 		virtual void Execute(GameObject* gameObject) = 0;
 		virtual void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) = 0;
 	};
-
 
 	//Delete if you don't use it
 	class EmptyCommand : public Command

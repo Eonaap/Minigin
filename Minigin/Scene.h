@@ -1,6 +1,5 @@
 #pragma once
 #include "SceneManager.h"
-
 namespace kaas
 {
 	class GameObject;
@@ -12,6 +11,8 @@ namespace kaas
 
 		void Update();
 		void Render() const;
+
+		std::string GetName() const;
 
 		~Scene();
 		Scene(const Scene& other) = delete;

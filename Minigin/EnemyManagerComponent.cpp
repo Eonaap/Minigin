@@ -80,7 +80,7 @@ void kaas::EnemyManagerComponent::Update()
 					GameObject* pGameObject = new GameObject{};
 					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
 					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
-					CoilyComponent* pSlickSlamComp = new CoilyComponent{ pGameObject, pCharacterComponent, m_pPlayerController };
+					CoilyComponent* pSlickSlamComp = new CoilyComponent{ pGameObject, pCharacterComponent, m_pPlayerController, this };
 					m_EnemyObjects.push_back(pGameObject);
 				}
 				break;
@@ -89,7 +89,7 @@ void kaas::EnemyManagerComponent::Update()
 					GameObject* pGameObject = new GameObject{};
 					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
 					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
-					SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent };
+					SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent, m_pPlayerController};
 					m_EnemyObjects.push_back(pGameObject);
 					break;
 				}
@@ -98,11 +98,12 @@ void kaas::EnemyManagerComponent::Update()
 					GameObject* pGameObject = new GameObject{};
 					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
 					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::nothing, true, true };
-					UggWrongWayComponent* pUggComp = new UggWrongWayComponent{ pGameObject, pCharacterComponent };
+					UggWrongWayComponent* pUggComp = new UggWrongWayComponent{ pGameObject, pCharacterComponent, m_pPlayerController, this };
 					m_EnemyObjects.push_back(pGameObject);
 					break;
 				}
 			}
+			m_LastCheckedEnemy++;
 		}
 	}
 
@@ -134,7 +135,7 @@ void kaas::EnemyManagerComponent::NextLevel()
 	{
 		if (m_Enemies[i].level == m_CurrentLevel)
 		{
-			m_LastCheckedEnemy = i;
+			m_LastCheckedEnemy = int(i);
 			return;
 		}
 	}
@@ -145,4 +146,7 @@ void kaas::EnemyManagerComponent::ResetEnemies()
 	m_PastTime = 0.0f;
 	m_CurrentLevel = 0;
 	m_LastCheckedEnemy = 0;
+
+	//Remove all enemies that didn't spawn from the past level
+	m_EnemyObjects.clear();
 }

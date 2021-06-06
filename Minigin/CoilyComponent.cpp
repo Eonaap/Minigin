@@ -1,14 +1,16 @@
 #include "MiniginPCH.h"
 #include "CoilyComponent.h"
 #include "CharacterControllerComponent.h"
+#include "EnemyManagerComponent.h"
 #include "TextureComponent.h"
 #include <stdlib.h>
 #include <time.h>
 
-kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController)
+kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager)
 	:BaseComponent{pGameObject}
 	,m_pController{pControllerComponent}
 	,m_pPlayerController{pPlayerController}
+	,m_pEnemyManager{pEnemyManager}
 	,m_IsDown{false}
 {
 	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/Coily.png" };
@@ -21,8 +23,11 @@ void kaas::CoilyComponent::Update()
 {
 	if (m_IsDown)
 	{
-		if (m_pPlayerController->GetCurrentID() == m_pController->GetCurrentID())
-			m_pPlayerController->KillCharacter();
+		if (m_pPlayerController->GetCurrentID() == m_pController->GetCurrentID()) 
+		{
+			m_pPlayerController->LoseLife();
+			m_pEnemyManager->ResetEnemies();
+		}
 
 		int playerRow = m_pPlayerController->GetCurrentRow();
 		int coilyRow = m_pController->GetCurrentRow();
