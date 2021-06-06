@@ -50,7 +50,6 @@ void QBert::SetupScene() const
 	TransformComponent* transComp3 = new TransformComponent{ LevelObject, pos };
 	TextComponent* pLevelTextComponent = new TextComponent{ LevelObject, "Level 1", pFont2 };
 	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/Tiles.png", "../Data/Disc.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
-	EnemyManagerComponent* pEnemyManagerComponent = new EnemyManagerComponent{LevelObject, "../Data/EnemiesData.json" };
 	scene.Add(LevelObject);
 
 	//Create the player
@@ -66,6 +65,8 @@ void QBert::SetupScene() const
 	QBertObject->GetSubject()->AddObserver(new HealthComponent{ 3, QBertObject });
 
 	scene.Add(QBertObject);
+
+	EnemyManagerComponent* pEnemyManagerComponent = new EnemyManagerComponent{ LevelObject, "../Data/EnemiesData.json", pCharacterController };
 
 	//Put QBert as player one in the inputManager
 	InputManager::GetInstance().SetPlayerOne(QBertObject);

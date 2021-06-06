@@ -31,3 +31,9 @@ void kaas::TextureComponent::Render() const
 
 	kaas::Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
+
+void kaas::TextureComponent::SetTexture(std::string fileLocation)
+{
+	delete m_pTexture;
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(fileLocation);
+}

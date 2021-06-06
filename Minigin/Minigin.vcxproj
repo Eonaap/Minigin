@@ -211,6 +211,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="CharacterControllerComponent.h" />
+    <ClInclude Include="CoilyComponent.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="EnemyManagerComponent.h" />
@@ -237,12 +238,14 @@
     <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="UggWrongWayComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioLocator.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="CharacterControllerComponent.cpp" />
+    <ClCompile Include="CoilyComponent.cpp" />
     <ClCompile Include="EnemyManagerComponent.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
@@ -271,6 +274,7 @@
     <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="UggWrongWayComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,13 +9,18 @@
 #include "LevelComponent.h"
 #include "SlickSamControllerComponent.h"
 #include "CharacterControllerComponent.h"
+#include "CoilyComponent.h"
+#include "UggWrongWayComponent.h"
 #include "TransformComponent.h"
 
 
 using namespace rapidjson;
-kaas::EnemyManagerComponent::EnemyManagerComponent(GameObject* pGameObject, std::string enemyListFilePath)
+kaas::EnemyManagerComponent::EnemyManagerComponent(GameObject* pGameObject, std::string enemyListFilePath, CharacterControllerComponent* pPlayerController)
 	:BaseComponent{pGameObject}
 	,m_PastTime{0.0f}
+	,m_CurrentLevel{0}
+	,m_LastCheckedEnemy{0}
+	,m_pPlayerController{pPlayerController}
 {
 	m_pLevel = pGameObject->GetComponent<LevelComponent>();
 
@@ -64,25 +69,40 @@ void kaas::EnemyManagerComponent::Update()
 {
 	m_PastTime += Timer::GetInstance().GetDeltaTime();
 
-	if (!m_Enemies.empty()) 
+	if (m_LastCheckedEnemy != m_Enemies.size() - 1) 
 	{
-		if (m_Enemies[0].spawnTime <= m_PastTime)
+		if (m_Enemies[m_LastCheckedEnemy].spawnTime <= m_PastTime && m_Enemies[m_LastCheckedEnemy].level == m_CurrentLevel)
 		{
-			switch (m_Enemies[0].type)
+			switch (m_Enemies[m_LastCheckedEnemy].type)
 			{
-			case enemieTypes::Coily:
+				case enemieTypes::Coily:
+				{
+					GameObject* pGameObject = new GameObject{};
+					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
+					CoilyComponent* pSlickSlamComp = new CoilyComponent{ pGameObject, pCharacterComponent, m_pPlayerController };
+					m_EnemyObjects.push_back(pGameObject);
+				}
 				break;
-			case enemieTypes::SlickSam:
-				GameObject* pGameObject = new GameObject{};
-				TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-				CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
-				SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent };
-				m_EnemyObjects.push_back(pGameObject);
-				break;
-			case enemieTypes::UggWrongway:
-				break;
+				case enemieTypes::SlickSam:
+				{
+					GameObject* pGameObject = new GameObject{};
+					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
+					SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent };
+					m_EnemyObjects.push_back(pGameObject);
+					break;
+				}
+				case enemieTypes::UggWrongway:
+				{
+					GameObject* pGameObject = new GameObject{};
+					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::nothing, true, true };
+					UggWrongWayComponent* pUggComp = new UggWrongWayComponent{ pGameObject, pCharacterComponent };
+					m_EnemyObjects.push_back(pGameObject);
+					break;
+				}
 			}
-			m_Enemies.erase(m_Enemies.begin());
 		}
 	}
 
@@ -108,8 +128,21 @@ void kaas::EnemyManagerComponent::NextLevel()
 	m_CurrentLevel++;
 
 	//Remove all enemies that didn't spawn from the past level
-	m_Enemies.erase(std::remove_if(m_Enemies.begin(),
-		m_Enemies.end(),
-		[&](EnemieData enemieData) {return enemieData.level < m_CurrentLevel; }),
-		m_Enemies.end());
+	m_EnemyObjects.clear();
+
+	for (size_t i = 0; i < m_Enemies.size(); i++)
+	{
+		if (m_Enemies[i].level == m_CurrentLevel)
+		{
+			m_LastCheckedEnemy = i;
+			return;
+		}
+	}
+}
+
+void kaas::EnemyManagerComponent::ResetEnemies()
+{
+	m_PastTime = 0.0f;
+	m_CurrentLevel = 0;
+	m_LastCheckedEnemy = 0;
 }

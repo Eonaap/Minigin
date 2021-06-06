@@ -17,6 +17,9 @@ namespace kaas
 		void SetTargetByID(int tileID);
 
 		void KillCharacter();
+
+		int GetCurrentRow() const;
+		int GetCurrentID() const;
 	private:
 		int m_CurrentTileID, m_CurrentTargetID, m_CurrentRow;
 		glm::vec2 m_TargetPos;

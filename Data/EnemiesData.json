@@ -1,7 +1,7 @@
 {
 	"Enemies": [
 		{
-			"EnemyType": 1,
+			"EnemyType": 2,
 			"SpawnTime": 5,
 			"Level": 0
 		},

@@ -29,7 +29,9 @@ namespace kaas
 		topLeft,
 		topRight,
 		bottomLeft,
-		bottomRight
+		bottomRight,
+		UggWrongWayLeft,
+		UggWrongWayRight
 	};
 
 	enum class TileAffection

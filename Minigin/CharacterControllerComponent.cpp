@@ -134,6 +134,12 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		case int(MovementDirections::bottomRight) :
 			newTileID = m_CurrentTileID + m_CurrentRow + 1;
 			break;
+		case int(MovementDirections::UggWrongWayLeft) :
+			newTileID = m_CurrentTileID - 1;
+			break;
+		case int(MovementDirections::UggWrongWayRight) :
+			newTileID = m_CurrentTileID  + 1;
+			break;
 		}
 
 		//to prevent the player to go from one side of the pyramid to the other
@@ -142,77 +148,122 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		//Ref for calculating row in numerical pyramid https://stackoverflow.com/questions/37513699/find-row-of-pyramid-based-on-index
 		switch (direction)
 		{
-		case int(MovementDirections::topLeft) :
-			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
+			case int(MovementDirections::topLeft) :
 			{
-				if (m_CanJumpOff)
+				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
 				{
-					m_TargetPos = m_pLevel->GetVoidPos(m_CurrentTileID - m_CurrentRow + 1, true);
-					m_IsMoving = true;
-					m_JumpedInVoid = true;
-				}
-				
-				return;
-			}
-			break;
-		case int(MovementDirections::topRight) :
-			if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
-			{
-				if (m_CanJumpOff)
-				{
-					int correctID = m_CurrentTileID - m_CurrentRow;
-					if (correctID < 0)
-						correctID = 0;
+					if (m_CanJumpOff)
+					{
+						m_TargetPos = m_pLevel->GetVoidPos(m_CurrentTileID - m_CurrentRow + 1, true);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
 
-					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
-					m_IsMoving = true;
-					m_JumpedInVoid = true;
+					return;
 				}
-				return;
+				break;
 			}
-			break;
-		case int(MovementDirections::bottomLeft) :
-			if (m_CurrentRow == 7)
+			
+			case int(MovementDirections::topRight) :
 			{
-				if (m_CanJumpOff)
+				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
 				{
-					int correctID = m_CurrentTileID + m_CurrentRow - 1;
-					if (correctID < 0)
-						correctID = 0;
+					if (m_CanJumpOff)
+					{
+						int correctID = m_CurrentTileID - m_CurrentRow;
+						if (correctID < 0)
+							correctID = 0;
 
-					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
-					m_IsMoving = true;
-					m_JumpedInVoid = true;
+						m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
+					return;
 				}
+				break;
 			}
-		break;
-		case int(MovementDirections::bottomRight) :
-			if (m_CurrentRow == 7)
+			
+			case int(MovementDirections::bottomLeft) :
 			{
-				if (m_CanJumpOff)
+				if (m_CurrentRow == 7)
 				{
-					int correctID = m_CurrentTileID + m_CurrentRow;
-					if (correctID < 0)
-						correctID = 0;
+					if (m_CanJumpOff)
+					{
+						int correctID = m_CurrentTileID + m_CurrentRow - 1;
+						if (correctID < 0)
+							correctID = 0;
 
-					m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
-					m_IsMoving = true;
-					m_JumpedInVoid = true;
+						m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
 				}
+				break;
 			}
-			break;
+			
+			case int(MovementDirections::bottomRight) :
+			{
+				if (m_CurrentRow == 7)
+				{
+					if (m_CanJumpOff)
+					{
+						int correctID = m_CurrentTileID + m_CurrentRow;
+						if (correctID < 0)
+							correctID = 0;
+
+						m_TargetPos = m_pLevel->GetVoidPos(correctID, false);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
+				}
+				break;
+			}
+			
+			case int(MovementDirections::UggWrongWayLeft) :
+			{
+				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID))) / 2)))
+				{
+					if (m_CanJumpOff)
+					{
+						m_TargetPos = m_pLevel->GetVoidPos(m_CurrentTileID, true);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
+					return;
+				}
+				break;
+			}
+			
+			case int(MovementDirections::UggWrongWayRight) :
+			{
+				if (int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 1))) / 2)) != int(ceil((-1 + sqrt(1 + 8 * (m_CurrentTileID + 2))) / 2)))
+				{
+					if (m_CanJumpOff)
+					{
+						m_TargetPos = m_pLevel->GetVoidPos(m_CurrentTileID, true);
+						m_IsMoving = true;
+						m_JumpedInVoid = true;
+					}
+					return;
+				}
+				break;
+			}	
 		}
 
 		if (newTileID < 0 || newTileID > 27)
 			return;
 
-		//Change the row according to the character going up or down
-		if (m_CurrentTargetID < newTileID)
-			m_CurrentRow++;
-		else
-			m_CurrentRow--;
+		if (direction != int(MovementDirections::UggWrongWayLeft) && direction != int(MovementDirections::UggWrongWayRight))
+		{
+			//Change the row according to the character going up or down
+			if (m_CurrentTargetID < newTileID)
+				m_CurrentRow++;
+			else
+				m_CurrentRow--;
+		}
 
 		m_CurrentTargetID = newTileID;
+		std::cout << m_CurrentRow << '\n';
 		m_TargetPos = m_pLevel->GetTilePos(m_CurrentTargetID);
 
 		m_IsMoving = true;
@@ -231,4 +282,14 @@ void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
 void kaas::CharacterControllerComponent::KillCharacter()
 {
 	m_pGameObject->SetActive(false);
+}
+
+int kaas::CharacterControllerComponent::GetCurrentRow() const
+{
+	return m_CurrentRow;
+}
+
+int kaas::CharacterControllerComponent::GetCurrentID() const
+{
+	return m_CurrentTileID;
 }

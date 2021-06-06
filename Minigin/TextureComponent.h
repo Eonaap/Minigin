@@ -11,6 +11,7 @@ namespace kaas
 		~TextureComponent() override;
 		void Update() override;
 		void Render() const override;
+		void SetTexture(std::string fileLocation);
 	private:
 		Texture2D* m_pTexture;
 	};
