@@ -6,14 +6,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager)
+kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager, bool isAIController)
 	:BaseComponent{pGameObject}
 	,m_pController{pControllerComponent}
 	,m_pPlayerController{pPlayerController}
 	,m_pEnemyManager{pEnemyManager}
 	,m_IsDown{false}
+	,m_IsAIController{isAIController}
 {
-	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/Coily.png" };
+	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/CoilyBall.png" };
 
 	/* initialize random seed: */
 	srand(unsigned int(time(NULL)));
@@ -22,12 +23,17 @@ kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControlle
 void kaas::CoilyComponent::Update()
 {
 	if (m_IsDown)
-	{
+	{	
 		if (m_pPlayerController->GetCurrentID() == m_pController->GetCurrentID()) 
 		{
 			m_pPlayerController->LoseLife();
-			m_pEnemyManager->ResetEnemies();
+
+			if (m_IsAIController)
+				m_pEnemyManager->ResetEnemies();
 		}
+
+		if (!m_IsAIController)
+			return;
 
 		int playerRow = m_pPlayerController->GetCurrentRow();
 		int coilyRow = m_pController->GetCurrentRow();
@@ -98,7 +104,7 @@ void kaas::CoilyComponent::Update()
 		if (m_pController->GetCurrentRow() == 7)
 		{
 			m_IsDown = true;
-			m_pGameObject->GetComponent<TextureComponent>()->SetTexture("../Data/Coily2.png");
+			m_pGameObject->GetComponent<TextureComponent>()->SetTexture("../Data/Coily.png");
 		}
 	}
 }

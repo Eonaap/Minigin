@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
-#include "CharacterControllerComponent.h"
 #include "Subject.h"
 #include "Timer.h"
+#include "Components.h"
 #include <glm.hpp>
 #include <math.h>
 
@@ -304,4 +304,26 @@ int kaas::CharacterControllerComponent::GetCurrentRow() const
 int kaas::CharacterControllerComponent::GetCurrentID() const
 {
 	return m_CurrentTileID;
+}
+
+void kaas::CharacterControllerComponent::PrepareOtherModes(GameObject* pPlayerTwo, bool modeIsCoop)
+{
+	if (modeIsCoop)
+	{
+		//Player 1
+		glm::vec2 pos = m_pLevel->GetTilePos(21);
+		m_CurrentRow = 7;
+		m_pTransform->SetPosition(pos);
+		
+		//Player 2
+		new TextureComponent{pPlayerTwo, "../Data/QBert.png"};
+		pos = m_pLevel->GetTilePos(27);
+		m_CurrentRow = 7;
+		pPlayerTwo->GetComponent<TransformComponent>()->SetPosition(pos);
+	}
+	else 
+	{
+		//We can make the playerController and EnemyManager a nullptr cause it's not needed for coily that's not controller by AI
+		new CoilyComponent{ pPlayerTwo, pPlayerTwo->GetComponent<CharacterControllerComponent>(), this, nullptr, false };
+	}
 }

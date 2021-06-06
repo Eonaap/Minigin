@@ -24,9 +24,16 @@ bool kaas::InputManager::ProcessInput()
 	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
 	DWORD InputState = XInputGetState(0, &m_CurrentState);
 	if (InputState == ERROR_NOT_CONNECTED)
-		std::cout << "No controller found.\n";
+		std::cout << "first controller not found.\n";
 	else if (InputState != ERROR_SUCCESS)
-		std::cout << "Something went wrong with the input.\n";
+		std::cout << "Something went wrong with the input for the first controller.\n";
+
+	ZeroMemory(&m_CurrentStateP2, sizeof(XINPUT_STATE));
+	DWORD InputState2 = XInputGetState(1, &m_CurrentStateP2);
+	if (InputState2 == ERROR_NOT_CONNECTED)
+		std::cout << "Second controller not found.\n";
+	else if (InputState2 != ERROR_SUCCESS)
+		std::cout << "Something went wrong with the input for the second controller.\n";
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
@@ -52,9 +59,9 @@ bool kaas::InputManager::ProcessInput()
 	return true;
 }
 
-bool kaas::InputManager::ProcessControllerButton(ControllerAction& button)
+bool kaas::InputManager::ProcessControllerButton(ControllerAction& button, int playerID)
 {
-	if (IsPressed(button.button))
+	if (IsPressed(button.button, playerID))
 	{
 		if (CheckPressingState(button)) {
 			return true;
@@ -73,36 +80,38 @@ bool kaas::InputManager::ProcessControllerButton(ControllerAction& button)
 	return false;
 }
 
-bool kaas::InputManager::IsPressed(ControllerButton button) const
+bool kaas::InputManager::IsPressed(ControllerButton button, int playerID) const
 {
+	XINPUT_STATE state = playerID == 1 ? m_CurrentState : m_CurrentStateP2;
+
 	switch (button)
 	{
 	case kaas::ControllerButton::ButtonA:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_A)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_A)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonB:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_B)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_B)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonX:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_X)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_X)
 			return true;
 		break;
 	case kaas::ControllerButton::ButtonY:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
 			return true;
 	case kaas::ControllerButton::DPAD_LEFT:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT)
 			return true;
 	case kaas::ControllerButton::DPAD_RIGHT:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT)
 			return true;
 	case kaas::ControllerButton::DPAD_UP:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP)
 			return true;
 	case kaas::ControllerButton::DPAD_DOWN:
-		if (m_CurrentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN)
+		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN)
 			return true;
 		break;
 	default: return false;
@@ -130,12 +139,6 @@ bool kaas::InputManager::CheckPressingState(ControllerAction& button)
 	return false;
 }
 
-void kaas::InputManager::SetPlayerOne(GameObject* pPlayerObject)
-{
-	UNREFERENCED_PARAMETER(pPlayerObject);
-	//m_pPlayerOne = pPlayerObject;
-}
-
 bool kaas::InputManager::KeyIsPressed(SDL_KeyCode scanCode)
 {
 	if (m_Keys[scanCode] && m_KeysPreviousUpdate[scanCode] == false)
@@ -152,4 +155,9 @@ bool kaas::InputManager::KeyIsPressed(SDL_KeyCode scanCode)
 XINPUT_STATE kaas::InputManager::GetCurrentState() const
 {
 	return m_CurrentState;
+}
+
+XINPUT_STATE kaas::InputManager::GetCurrentStateP2() const
+{
+	return m_CurrentStateP2;
 }

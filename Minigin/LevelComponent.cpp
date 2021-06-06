@@ -308,6 +308,12 @@ void kaas::LevelComponent::ResetScene()
 {
 	m_ResetTileCounter = int(m_pTiles.size()) - 1;
 
+	for (Disc disc : m_pPossibleDiscLocations)
+	{
+		if (disc.level == m_LevelNumber)
+			m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::DiscRemained);
+	}
+
 	//Multiply by 2 to give it a small delay
 	m_ResetTimer = m_OriginalResetTimer * 2;
 }

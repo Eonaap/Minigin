@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
-
+#include "Structs.h"
 namespace kaas
 {
 	class Texture2D;
@@ -17,5 +17,7 @@ namespace kaas
 		Texture2D* m_pWonBackground;
 		Texture2D* m_pLostBackground;
 		int m_ActiveButton;
+		ControllerAction m_ControllerEnterButton;
+		ControllerAction m_ControllerNextButton;
 	};
 }

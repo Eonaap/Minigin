@@ -41,13 +41,13 @@ void QBert::SetupScene() const
 		//Background
 		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackground, "../Data/EndMenu.png" };
 		pBackgroundTexture->SetTextureSize(640, 480);
-		MainMenuComponent* pEndMenuComponent = new MainMenuComponent{ pBackground };
+		EndMenuComponent* pEndMenuComponent = new EndMenuComponent{ pBackground };
 
 		Endscene.Add(pBackground);
 	}
 
 	glm::vec2 pos{};
-	auto& scene = SceneManager::GetInstance().CreateScene("SingleMode");
+	auto& scene = SceneManager::GetInstance().CreateScene("Game");
 
 	auto go = new GameObject{};
 	TextureComponent* textureComp = new TextureComponent{ go, "background.jpg" };
@@ -56,17 +56,20 @@ void QBert::SetupScene() const
 	//Create the level object
 	//Create the levelComponent outside of the backets, to send it to th characterComp
 	auto QBertObject = new GameObject{};
+	auto QBertObject2 = new GameObject{};
 	auto pFont3 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto pFont4 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto pFont5 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 50);
 	pos.x = 25.0f;
 	pos.y = 100.0f;
 	TransformComponent* transComp4 = new TransformComponent{ QBertObject, pos };
+	TransformComponent* transComp5 = new TransformComponent{ QBertObject2, pos };
 	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont3 };
 	TextComponent* textComp3 = new TextComponent{ QBertObject, "", pFont4 };
 	TextComponent* textComp4 = new TextComponent{ pBackground, "", pFont5 };
 	StatsObserver* pStats = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
 	StatsObserver* pStats2 = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
+	StatsObserver* pStats3 = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
 	auto LevelObject = new GameObject{};
 	LevelObject->GetSubject()->AddObserver(pStats);
 
@@ -83,13 +86,32 @@ void QBert::SetupScene() const
 		CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent, TileAffection::always };
 		TextureComponent* pCharacterTextureComp = new TextureComponent{ QBertObject, "../Data/QBert.png" };
 		QBertObject->GetSubject()->AddObserver(pStats2);
-		InputComponent* pInputComponent = new InputComponent{ QBertObject };
+		InputComponent* pInputComponent = new InputComponent{ QBertObject, 1 };
 
 		pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_BACKQUOTE, new MoveCommand{}, PressingState::ThumbStick, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_s, new MoveBottomRightCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_a, new MoveBottomLeftCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_q, new MoveTopLeftCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::RightThumbStick, SDLK_w, new MoveTopRightCommand{}, PressingState::buttonDown, false });
 		scene.Add(QBertObject);
 
 		//Create the EnemyManagercomponent with the characterController
 		EnemyManagerComponent* pEnemyManagerComponent = new EnemyManagerComponent{ LevelObject, "../Data/EnemiesData.json", pCharacterController };
+	}
+
+	//Create a second player
+	{
+
+		CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject2, pLevelComponent, TileAffection::always };
+		QBertObject->GetSubject()->AddObserver(pStats3);
+		InputComponent* pInputComponent = new InputComponent{ QBertObject2, 2 };
+
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_BACKQUOTE, new MoveCommand{}, PressingState::ThumbStick, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_g, new MoveBottomRightCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_f, new MoveBottomLeftCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_r, new MoveTopLeftCommand{}, PressingState::buttonDown, false });
+		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_t, new MoveTopRightCommand{}, PressingState::buttonDown, false });
+		scene.Add(QBertObject2);
 	}
 
 	//Create the audioManager in the audioLocator and add 2 sounds
@@ -101,18 +123,12 @@ void QBert::SetupScene() const
 	{
 		Scene& Startscene = SceneManager::GetInstance().CreateScene("MainMenu");
 
-		//StartScreen
-		GameObject* pStartScreen = new GameObject();
-		TextureComponent* pStartScreenTexture = new TextureComponent{ pStartScreen, "../Data/StartScreen.png" };
-		pStartScreenTexture->SetTextureSize(640, 480);
-
 		//Background
 		GameObject* pBackgroundMainMenu = new GameObject();
-		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackgroundMainMenu, "../Data/MainMenuControls.png" };
+		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackgroundMainMenu, "../Data/MainMenu.png" };
 		pBackgroundTexture->SetTextureSize(640, 480);
-		MainMenuComponent* pMainMenuComponent = new MainMenuComponent{ pBackgroundMainMenu };
+		MainMenuComponent* pMainMenuComponent = new MainMenuComponent{ pBackgroundMainMenu, QBertObject, QBertObject2 };
 
-		Startscene.Add(pStartScreen);
 		Startscene.Add(pBackgroundMainMenu);
 	}
 

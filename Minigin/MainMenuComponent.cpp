@@ -1,19 +1,29 @@
 #include "MiniginPCH.h"
 #include "MainMenuComponent.h"
 #include "ResourceManager.h"
-#include "TextureComponent.h"
+#include "Components.h"
 #include "Structs.h"
 #include "Renderer.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 
-kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject)
+kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject, GameObject* pPlayerOne, GameObject* pPlayerTwo)
 	:BaseComponent{pGameObject}
 	,m_ActiveButton{2}
+	,m_pPlayerOne{pPlayerOne}
+	,m_pPlayerTwo{pPlayerTwo}
+	,m_ControllerEnterButton{}
+	,m_ControllerNextButton{}
 {
 	m_pSingleButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/SingleButton.png");
 	m_pCoopButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/CoopButton.png");
 	m_pVersusButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/VersusButton.png");
+
+	m_ControllerEnterButton.button = ControllerButton::ButtonA;
+	m_ControllerEnterButton.state = PressingState::buttonDown;
+
+	m_ControllerNextButton.button = ControllerButton::DPAD_RIGHT;
+	m_ControllerNextButton.state = PressingState::buttonDown;
 }
 
 kaas::MainMenuComponent::~MainMenuComponent()
@@ -30,30 +40,27 @@ kaas::MainMenuComponent::~MainMenuComponent()
 
 void kaas::MainMenuComponent::Update()
 {
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_d))
+	//InputManager::GetInstance().ProcessControllerButton();
+	if (InputManager::GetInstance().KeyIsPressed(SDLK_d) || InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
 		{
+			m_ControllerNextButton.isDown = true;
 			m_ActiveButton++;
 			if (m_ActiveButton > 2)
 				m_ActiveButton = 0;
 		}
 
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_RETURN))
+	if (InputManager::GetInstance().KeyIsPressed(SDLK_RETURN) || InputManager::GetInstance().ProcessControllerButton(m_ControllerEnterButton, 1))
 	{
 		switch (m_ActiveButton)
 		{
-		case 0:
-			//Open single mode
-			SceneManager::GetInstance().SetActiveScene("SingleMode");
-			break;
 		case 1:
-			//Open coop mode
-			SceneManager::GetInstance().SetActiveScene("CoopMode");
+			m_pPlayerOne->GetComponent<CharacterControllerComponent>()->PrepareOtherModes(m_pPlayerTwo, true);
 			break;
 		case 2:
-			//Open versus
-			SceneManager::GetInstance().SetActiveScene("VersusMode");
+			m_pPlayerOne->GetComponent<CharacterControllerComponent>()->PrepareOtherModes(m_pPlayerTwo, false);
 			break;
 		}
+		SceneManager::GetInstance().SetActiveScene("Game");
 	}
 }
 

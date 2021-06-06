@@ -70,7 +70,8 @@ namespace kaas
 		DPAD_RIGHT,
 		DPAD_UP,
 		DPAD_DOWN,
-		RightThumbStick
+		RightThumbStick,
+		LeftThumbStick
 	};
 
 	enum class PressingState

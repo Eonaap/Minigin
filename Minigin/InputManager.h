@@ -15,15 +15,16 @@ namespace kaas
 		InputManager();
 		~InputManager();
 		bool ProcessInput();
-		bool ProcessControllerButton(ControllerAction& button);
-		bool IsPressed(ControllerButton button) const;
+		bool ProcessControllerButton(ControllerAction& button, int playerID);
+		bool IsPressed(ControllerButton button, int playerID) const;
 		bool CheckPressingState(ControllerAction& button);
-		void SetPlayerOne(GameObject* pPlayerObject);
 		bool KeyIsPressed(SDL_KeyCode scanCode);
 
 		XINPUT_STATE GetCurrentState() const;
+		XINPUT_STATE GetCurrentStateP2() const;
 	private:
 		XINPUT_STATE m_CurrentState{};
+		XINPUT_STATE m_CurrentStateP2{};
 		std::vector<ControllerAction> m_actions;
 
 		static constexpr size_t m_KeySize{512};

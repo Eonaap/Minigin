@@ -32,7 +32,6 @@ namespace kaas
 
 		void SetTileState(int tileID, TileAffection tileAffection);
 		bool GetLevelFinished();
-
 	private:
 		void ResetScene();
 		std::vector<Tile> m_pTiles;

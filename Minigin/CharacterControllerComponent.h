@@ -22,6 +22,8 @@ namespace kaas
 		void FireEvent(Event event);
 		int GetCurrentRow() const;
 		int GetCurrentID() const;
+
+		void PrepareOtherModes(GameObject* pPlayerTwo, bool modeIsCoop);
 	private:
 		int m_CurrentTileID, m_CurrentTargetID, m_CurrentRow;
 		glm::vec2 m_TargetPos;

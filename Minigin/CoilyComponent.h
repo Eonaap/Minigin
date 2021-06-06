@@ -8,13 +8,13 @@ namespace kaas
 	class CoilyComponent : public BaseComponent
 	{
 	public:
-		CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager);
+		CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager, bool isAIController = true);
 
 		void Update() override;
 	private:
 		CharacterControllerComponent* m_pController;
 		CharacterControllerComponent* m_pPlayerController;
 		EnemyManagerComponent* m_pEnemyManager;
-		bool m_GoesToLeftSide, m_IsDown;
+		bool m_IsDown, m_IsAIController;
 	};
 }
