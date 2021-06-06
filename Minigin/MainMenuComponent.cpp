@@ -16,6 +16,18 @@ kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject)
 	m_pVersusButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/VersusButton.png");
 }
 
+kaas::MainMenuComponent::~MainMenuComponent()
+{
+	delete m_pSingleButtonActive;
+	m_pSingleButtonActive = nullptr;
+
+	delete m_pVersusButtonActive;
+	m_pVersusButtonActive = nullptr;
+
+	delete m_pCoopButtonActive;
+	m_pCoopButtonActive = nullptr;
+}
+
 void kaas::MainMenuComponent::Update()
 {
 	if (InputManager::GetInstance().KeyIsPressed(SDLK_d))

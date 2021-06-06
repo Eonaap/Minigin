@@ -9,6 +9,16 @@ kaas::InputComponent::InputComponent(GameObject* pGameObject)
 {
 }
 
+kaas::InputComponent::~InputComponent()
+{
+	for (ControllerAction action : m_Actions)
+	{
+		delete action.command;
+		action.command = nullptr;
+	}
+}
+
+
 void kaas::InputComponent::Update()
 {
 	for (ControllerAction& action: m_Actions)

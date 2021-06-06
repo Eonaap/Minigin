@@ -1,11 +1,8 @@
 #pragma once
+#include "Structs.h"
 namespace kaas
 {
 	class GameObject;
-
-	enum class Event {
-		LoseLife
-	};
 
 	class Observer
 	{

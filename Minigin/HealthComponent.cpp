@@ -1,2 +1,2 @@
 #include "MiniginPCH.h"
-#include "HealthComponent.h"
+#include "StatsObserver.h"

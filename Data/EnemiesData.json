@@ -1,19 +1,19 @@
 {
 	"Enemies": [
 		{
-			"EnemyType": 2,
+			"EnemyType": 0,
 			"SpawnTime": 5,
 			"Level": 0
 		},
 		{
-			"EnemyType": 2,
+			"EnemyType": 0,
 			"SpawnTime": 10,
 			"Level": 0
 		},
 		{
-			"EnemyType": 1,
+			"EnemyType": 0,
 			"SpawnTime": 5,
-			"Level": 1
+			"Level": 0
 		}
 	]
 }

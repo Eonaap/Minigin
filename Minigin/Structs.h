@@ -6,6 +6,14 @@ namespace kaas
 {
 	class Command;
 
+	enum class Event {
+		LoseLife,
+		ColorChange,
+		Coilydefeat,
+		DiscRemained,
+		CatchSlickSam
+	};
+
 	enum class TileStates
 	{
 		standard,

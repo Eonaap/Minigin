@@ -22,14 +22,9 @@ void kaas::Minigin::Initialize()
 	//Initialize SDL_mixer
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 4, 2048) < 0)
 		std::cout << (std::string("SDL_Mixer Error: ") + Mix_GetError());
-	
-	// == Initialize SDL_Mixer == 
-	const int mixerFlags{ MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG };
-	if ((Mix_Init(mixerFlags) & mixerFlags) != mixerFlags)
-		std::cout << (std::string("SDL_Mixer init Error: ") + Mix_GetError() + '\n');
 
 	// allocate 16 mixing channels
-	Mix_AllocateChannels(16);
+	//Mix_AllocateChannels(16);
 
 	m_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
@@ -51,10 +46,11 @@ void kaas::Minigin::Initialize()
 void kaas::Minigin::Cleanup()
 {
 	Renderer::GetInstance().Destroy();
+	AudioLocator::Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
-	SDL_Quit();
 	Mix_Quit();
+	SDL_Quit();
 }
 
 void kaas::Minigin::Run()

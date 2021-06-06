@@ -34,11 +34,15 @@ bool kaas::InputManager::ProcessInput()
 			return false;
 		}
 		if (e.type == SDL_KEYUP) {
-			m_Keys[e.key.keysym.sym] = false;
-			m_KeysPreviousUpdate[e.key.keysym.sym] = false;
+			if (e.key.keysym.sym < m_KeySize) 
+			{
+				m_Keys[e.key.keysym.sym] = false;
+				m_KeysPreviousUpdate[e.key.keysym.sym] = false;
+			}	
 		}
 		if (e.type == SDL_KEYDOWN) {
-			m_Keys[e.key.keysym.sym] = true;
+			if (e.key.keysym.sym < m_KeySize)
+				m_Keys[e.key.keysym.sym] = true;
 		}
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
 

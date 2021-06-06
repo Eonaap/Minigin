@@ -49,6 +49,62 @@ namespace kaas
 		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
 	};
 
+	class MoveTopLeftCommand : public Command
+	{
+	public:
+		void Execute(GameObject* gameObject) override {
+			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
+			if (temp)
+			{
+				temp->SetTarget(int(MovementDirections::topLeft));
+			}
+		}
+
+		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
+	};
+
+	class MoveTopRightCommand : public Command
+	{
+	public:
+		void Execute(GameObject* gameObject) override {
+			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
+			if (temp)
+			{
+				temp->SetTarget(int(MovementDirections::topRight));
+			}
+		}
+
+		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
+	};
+
+	class MoveBottomLeftCommand : public Command
+	{
+	public:
+		void Execute(GameObject* gameObject) override {
+			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
+			if (temp)
+			{
+				temp->SetTarget(int(MovementDirections::topRight));
+			}
+		}
+
+		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
+	};
+
+	class MoveBottomRightCommand : public Command
+	{
+	public:
+		void Execute(GameObject* gameObject) override {
+			CharacterControllerComponent* temp{ gameObject->GetComponent<CharacterControllerComponent>() };
+			if (temp)
+			{
+				temp->SetTarget(int(MovementDirections::topRight));
+			}
+		}
+
+		void Execute(GameObject* gameObject, glm::vec2 thumbStickValue) override { UNREFERENCED_PARAMETER(gameObject); UNREFERENCED_PARAMETER(thumbStickValue); };
+	};
+
 	class MoveCommand : public Command
 	{
 	public:

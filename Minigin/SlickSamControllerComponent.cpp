@@ -23,6 +23,8 @@ void kaas::SlickSamControllerComponent::Update()
 	m_pController->SetTarget(2 + random);
 
 	if (m_pController->GetCurrentID() == m_pPlayerController->GetCurrentID())
+	{
+		m_pPlayerController->FireEvent(Event::CatchSlickSam);
 		m_pGameObject->SetActive(false);
-	
+	}
 }

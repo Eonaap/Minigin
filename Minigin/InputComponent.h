@@ -2,11 +2,12 @@
 #include "Structs.h"
 #include <vector>
 namespace kaas 
-{	
+{
 	class InputComponent : public BaseComponent
 	{
 	public:
 		InputComponent(GameObject* pGameObject);
+		~InputComponent() override;
 
 		void Update() override;
 		void UpdateThumbStick(ControllerAction& action);

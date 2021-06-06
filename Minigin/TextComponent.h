@@ -19,7 +19,9 @@ namespace kaas
 		void Render() const;
 
 		void SetText(const std::string& text);
+		void SetPosOffset(glm::vec2 pos);
 	private:
+		bool m_NeedsUpdate;
 		std::string m_Text;
 		Font* m_pFont;
 		Texture2D* m_pTexture;

@@ -4,7 +4,9 @@
 #include "Texture2D.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "Timer.h"
+#include "Subject.h"
 #include "../3rdParty/rapidjson/rapidjson.h"
 #include "../3rdParty/rapidjson/reader.h"
 #include "../3rdParty/rapidjson/document.h"
@@ -28,6 +30,11 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(tileTexturePath);
 	m_pDiscTexture = ResourceManager::GetInstance().LoadTexture(discTexturePath);
 	m_pLevelText = pGameObject->GetComponent<TextComponent>();
+
+	if (!m_pLevelText)
+	{
+		std::cout << "text not found\n";
+	}
 
 	Document doc;
 
@@ -95,6 +102,12 @@ kaas::LevelComponent::~LevelComponent()
 {
 	delete m_pTexture;
 	m_pTexture = nullptr;
+
+	delete m_pDiscTexture;
+	m_pTexture = nullptr;
+
+	//delete m_pLevelText;
+	//m_pLevelText = nullptr;
 }
 
 void kaas::LevelComponent::Update()
@@ -152,16 +165,16 @@ void kaas::LevelComponent::Update()
 
 				if (m_ResetTileCounter == -1)
 				{
-					if (m_LevelNumber < 2) 
+					if (m_LevelNumber < 0) 
 					{
 						m_LevelNumber++;
-						//m_pLevelText->SetText("Level " + std::to_string(m_LevelNumber + 1));
-
+						m_pLevelText->SetText("Level " + std::to_string(m_LevelNumber + 1));
 						m_TilesLeft = int(m_pTiles.size());
 					}
 					else
 					{
 						m_LevelCompleted = true;
+						SceneManager::GetInstance().SetActiveScene("EndMenu");
 						m_pLevelText->SetText("Level Completed!");
 					}
 				}
@@ -221,6 +234,7 @@ void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 		{
 			m_pTiles[tileID].tileState = TileStates::target;
 			m_TilesLeft--;
+			m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::ColorChange);
 		}
 		if (m_pTiles[tileID].tileState == TileStates::target && tileAffection == TileAffection::onlyActive)
 		{
@@ -233,12 +247,16 @@ void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 		if (tileAffection == TileAffection::always)
 		{
 			if (m_pTiles[tileID].tileState == TileStates::standard)
+			{
 				m_pTiles[tileID].tileState = TileStates::intermediate;
+				m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::ColorChange);
+			}
 
 			else if (m_pTiles[tileID].tileState == TileStates::intermediate)
 			{
 				m_pTiles[tileID].tileState = TileStates::target;
 				m_TilesLeft--;
+				m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::ColorChange);
 			}
 		}
 		else if (tileAffection == TileAffection::onlyActive)
@@ -265,6 +283,7 @@ void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 			else
 			{
 				m_pTiles[tileID].tileState = TileStates::target;
+				m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::ColorChange);
 				m_TilesLeft--;
 			}
 		}

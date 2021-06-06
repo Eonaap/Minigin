@@ -5,6 +5,7 @@
 
 namespace kaas
 {
+
 	class CharacterControllerComponent : public BaseComponent
 	{
 	public:
@@ -18,7 +19,7 @@ namespace kaas
 
 		void KillCharacter();
 		void LoseLife();
-
+		void FireEvent(Event event);
 		int GetCurrentRow() const;
 		int GetCurrentID() const;
 	private:

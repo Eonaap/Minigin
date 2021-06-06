@@ -8,7 +8,7 @@ namespace kaas
 	{
 	public:
 		MainMenuComponent(GameObject* pGameObject);
-
+		~MainMenuComponent();
 		void Update() override;
 		void Render() const override;
 	private:

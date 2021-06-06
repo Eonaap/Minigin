@@ -13,6 +13,7 @@ kaas::TextComponent::TextComponent(GameObject* pGameObject, std::string text, Fo
 	,m_Text{text}
 	,m_pFont{pFont}
 	,m_Pos{}
+	,m_NeedsUpdate{true}
 {
 	TransformComponent* transform = m_pGameObject->GetComponent<TransformComponent>();
 	if (transform)
@@ -31,22 +32,25 @@ kaas::TextComponent::~TextComponent()
 
 void kaas::TextComponent::Update()
 {
-	const SDL_Color color = { 255,255,255 }; // only white text is supported now
-	const auto surf = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), color);
-	if (surf == nullptr)
+	if (m_NeedsUpdate)
 	{
-		throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
-	}
-	auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
-	if (texture == nullptr)
-	{
-		throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
-	}
-	SDL_FreeSurface(surf);
+		const SDL_Color color = { 255,255,255 }; // only white text is supported now
+		const auto surf = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), color);
+		if (surf == nullptr)
+		{
+			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+		}
+		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
+		if (texture == nullptr)
+		{
+			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
+		}
+		SDL_FreeSurface(surf);
 
-	delete m_pTexture;
-	m_pTexture = new Texture2D{ texture };
-	//m_NeedsUpdate = false;
+		delete m_pTexture;
+		m_pTexture = new Texture2D{ texture };
+		m_NeedsUpdate = false;
+	}
 }
 
 void kaas::TextComponent::Render() const
@@ -60,4 +64,10 @@ void kaas::TextComponent::Render() const
 void kaas::TextComponent::SetText(const std::string& text)
 {
 	m_Text = text;
+	m_NeedsUpdate = true;
+}
+
+void kaas::TextComponent::SetPosOffset(glm::vec2 pos)
+{
+	m_Pos += pos;
 }

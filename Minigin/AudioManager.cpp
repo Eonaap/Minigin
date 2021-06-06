@@ -19,6 +19,7 @@ kaas::AudioManager::AudioManager()
 
 kaas::AudioManager::~AudioManager()
 {
+
 	//Free the music
 	for (AudioPiece music : m_pAudioList)
 	{

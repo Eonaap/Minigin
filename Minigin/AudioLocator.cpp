@@ -21,3 +21,9 @@ void kaas::AudioLocator::provide(AudioBase* service)
 		pService = service;
 	}
 }
+
+void kaas::AudioLocator::Destroy()
+{
+	delete pService;
+	pService = nullptr;
+}

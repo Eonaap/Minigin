@@ -48,8 +48,11 @@ void kaas::CharacterControllerComponent::Update()
 				m_IsMoving = false;
 				m_CurrentTileID = m_CurrentTargetID;
 
-				if (m_TileAffection != TileAffection::nothing)
+				if (m_TileAffection != TileAffection::nothing) 
+				{
 					m_pLevel->SetTileState(m_CurrentTileID, m_TileAffection);
+				}
+					
 
 				if (m_pLevel->GetLevelFinished())
 				{
@@ -263,7 +266,6 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		}
 
 		m_CurrentTargetID = newTileID;
-		std::cout << m_CurrentRow << '\n';
 		m_TargetPos = m_pLevel->GetTilePos(m_CurrentTargetID);
 
 		m_IsMoving = true;
@@ -287,6 +289,11 @@ void kaas::CharacterControllerComponent::KillCharacter()
 void kaas::CharacterControllerComponent::LoseLife()
 {
 	m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::LoseLife);
+}
+
+void kaas::CharacterControllerComponent::FireEvent(Event event)
+{
+	m_pGameObject->GetSubject()->notify(*m_pGameObject, event);
 }
 
 int kaas::CharacterControllerComponent::GetCurrentRow() const

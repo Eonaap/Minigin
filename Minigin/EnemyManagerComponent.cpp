@@ -79,7 +79,7 @@ void kaas::EnemyManagerComponent::Update()
 				{
 					GameObject* pGameObject = new GameObject{};
 					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
+					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::nothing, true, true };
 					CoilyComponent* pSlickSlamComp = new CoilyComponent{ pGameObject, pCharacterComponent, m_pPlayerController, this };
 					m_EnemyObjects.push_back(pGameObject);
 				}

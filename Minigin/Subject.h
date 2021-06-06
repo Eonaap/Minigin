@@ -10,10 +10,12 @@ namespace kaas
 		Subject();
 		~Subject()
 		{
-			for (Observer* pObserver : m_pObservers)
+			for (size_t i = 0; i < m_pObservers.size(); i++)
 			{
-				delete pObserver;
-				pObserver = nullptr;
+				if (m_pObservers[i]) {
+					delete m_pObservers[i];
+					m_pObservers[i] = nullptr;
+				}
 			}
 		}
 		void notify(const GameObject& gameObject, const Event& eventInfo)

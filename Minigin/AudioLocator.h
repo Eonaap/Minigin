@@ -8,9 +8,8 @@ namespace kaas
 	{
 	public:
 		static AudioBase* getAudio();
-
 		static void provide(AudioBase* service);
-
+		static void Destroy();
 	private:
 		static kaas::AudioBase* pService;
 	};
