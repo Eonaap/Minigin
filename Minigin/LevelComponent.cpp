@@ -322,7 +322,7 @@ glm::vec2 LevelComponent::GetTilePos(int tileID)
 glm::vec2 LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
 {
 	glm::vec2 pos{};
-	if (tileID <= m_pTiles.size()-1)
+	if (tileID <= int(m_pTiles.size())-1)
 	{
 		//If tile has a connection to a disc, return that position
 		for (const Disc& disc : m_pPossibleDiscLocations)

@@ -68,7 +68,7 @@ void EnemyManagerComponent::Update()
 {
 	m_PastTime += kaas::Timer::GetInstance().GetDeltaTime();
 
-	if (m_LastCheckedEnemy != m_Enemies.size() - 1) 
+	if (m_LastCheckedEnemy != int(m_Enemies.size()) - 1) 
 	{
 		if (m_Enemies[m_LastCheckedEnemy].spawnTime <= m_PastTime && m_Enemies[m_LastCheckedEnemy].level == m_CurrentLevel)
 		{
