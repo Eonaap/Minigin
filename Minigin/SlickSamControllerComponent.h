@@ -1,18 +1,15 @@
 #pragma once
 #include "BaseComponent.h"
 
-namespace kaas 
+class CharacterControllerComponent;
+
+class SlickSamControllerComponent : public kaas::BaseComponent
 {
-	class CharacterControllerComponent;
+public:
+	SlickSamControllerComponent(kaas::GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController);
 
-	class SlickSamControllerComponent : public BaseComponent
-	{
-	public:
-		SlickSamControllerComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController);
-
-		void Update() override;
-	private:
-		CharacterControllerComponent* m_pController;
-		CharacterControllerComponent* m_pPlayerController;
-	};
-}
+	void Update() override;
+private:
+	CharacterControllerComponent* m_pController;
+	CharacterControllerComponent* m_pPlayerController;
+};

@@ -1,8 +1,8 @@
 #include "MiniginPCH.h"
 #include "InputComponent.h"
 #include <SDL.h>
-#include "Command.h"
 #include "InputManager.h"
+#include "Command.h"
 
 kaas::InputComponent::InputComponent(GameObject* pGameObject, int playerID)
 	:BaseComponent{pGameObject}

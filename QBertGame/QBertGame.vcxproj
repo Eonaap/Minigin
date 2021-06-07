@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;$(SolutionDir);$(SolutionDir)QBertGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>QBertGamePCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -114,7 +114,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;$(SolutionDir);$(SolutionDir)QBertGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>QBertGamePCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -140,7 +140,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;$(SolutionDir);$(SolutionDir)QBertGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>QBertGamePCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -166,7 +166,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\glm\glm;$(SolutionDir)Minigin;$(SolutionDir);$(SolutionDir)QBertGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>QBertGamePCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -187,6 +187,14 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Minigin\CharacterControllerComponent.cpp" />
+    <ClCompile Include="..\Minigin\CoilyComponent.cpp" />
+    <ClCompile Include="..\Minigin\EndMenuComponent.cpp" />
+    <ClCompile Include="..\Minigin\EnemyManagerComponent.cpp" />
+    <ClCompile Include="..\Minigin\LevelComponent.cpp" />
+    <ClCompile Include="..\Minigin\MainMenuComponent.cpp" />
+    <ClCompile Include="..\Minigin\SlickSamControllerComponent.cpp" />
+    <ClCompile Include="..\Minigin\UggWrongWayComponent.cpp" />
     <ClCompile Include="QBert.cpp" />
     <ClCompile Include="QBertGame.cpp" />
     <ClCompile Include="QBertGamePCH.cpp">
@@ -201,6 +209,14 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Minigin\CharacterControllerComponent.h" />
+    <ClInclude Include="..\Minigin\CoilyComponent.h" />
+    <ClInclude Include="..\Minigin\EndMenuComponent.h" />
+    <ClInclude Include="..\Minigin\EnemyManagerComponent.h" />
+    <ClInclude Include="..\Minigin\LevelComponent.h" />
+    <ClInclude Include="..\Minigin\MainMenuComponent.h" />
+    <ClInclude Include="..\Minigin\SlickSamControllerComponent.h" />
+    <ClInclude Include="..\Minigin\UggWrongWayComponent.h" />
     <ClInclude Include="QBert.h" />
     <ClInclude Include="QBertGamePCH.h" />
   </ItemGroup>

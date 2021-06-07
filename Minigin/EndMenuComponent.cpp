@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "EndMenuComponent.h"
 #include "ResourceManager.h"
 #include "TextureComponent.h"
@@ -6,16 +6,16 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 
-kaas::EndMenuComponent::EndMenuComponent(GameObject* pGameObject)
+EndMenuComponent::EndMenuComponent(kaas::GameObject* pGameObject)
 	:BaseComponent{ pGameObject }
 	,m_ActiveButton{ 0 }
 	, m_ControllerNextButton{}
 	,m_ControllerEnterButton{}
 {
-	m_pContinueButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/ContinueButton.png");
-	m_pQuitButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/QuitButton.png");
-	m_pWonBackground = ResourceManager::GetInstance().LoadTexture("../Data/EndMenuWon.png");
-	m_pLostBackground = ResourceManager::GetInstance().LoadTexture("../Data/EndMenu.png");
+	m_pContinueButtonActive = kaas::ResourceManager::GetInstance().LoadTexture("../Data/ContinueButton.png");
+	m_pQuitButtonActive = kaas::ResourceManager::GetInstance().LoadTexture("../Data/QuitButton.png");
+	m_pWonBackground = kaas::ResourceManager::GetInstance().LoadTexture("../Data/EndMenuWon.png");
+	m_pLostBackground = kaas::ResourceManager::GetInstance().LoadTexture("../Data/EndMenu.png");
 
 	m_ControllerEnterButton.button = ControllerButton::ButtonA;
 	m_ControllerEnterButton.state = PressingState::buttonDown;
@@ -24,7 +24,7 @@ kaas::EndMenuComponent::EndMenuComponent(GameObject* pGameObject)
 	m_ControllerNextButton.state = PressingState::buttonDown;
 }
 
-kaas::EndMenuComponent::~EndMenuComponent()
+EndMenuComponent::~EndMenuComponent()
 {
 	delete m_pContinueButtonActive;
 	m_pContinueButtonActive = nullptr;
@@ -39,23 +39,24 @@ kaas::EndMenuComponent::~EndMenuComponent()
 	m_pLostBackground = nullptr;
 }
 
-void kaas::EndMenuComponent::Update()
+void EndMenuComponent::Update()
 {
 
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_d) || InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
+	if (kaas::InputManager::GetInstance().KeyIsPressed(SDLK_d) || kaas::InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
 	{
+		m_ControllerNextButton.isDown = true;
 		m_ActiveButton++;
 		if (m_ActiveButton > 1)
 			m_ActiveButton = 0;
 	}
 
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_RETURN) || InputManager::GetInstance().ProcessControllerButton(m_ControllerEnterButton, 1))
+	if (kaas::InputManager::GetInstance().KeyIsPressed(SDLK_RETURN) || kaas::InputManager::GetInstance().ProcessControllerButton(m_ControllerEnterButton, 1))
 	{
 		switch (m_ActiveButton)
 		{
 		case 0:
 			//Open Main menu
-			SceneManager::GetInstance().SetActiveScene("MainMenu");
+			kaas::SceneManager::GetInstance().SetActiveScene("MainMenu");
 			break;
 		case 1:
 			//Quit the application
@@ -69,7 +70,7 @@ void kaas::EndMenuComponent::Update()
 	}
 }
 
-void kaas::EndMenuComponent::Render() const
+void EndMenuComponent::Render() const
 {
 	float x, y, w, h;
 	//Render Single button

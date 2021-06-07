@@ -86,31 +86,31 @@ bool kaas::InputManager::IsPressed(ControllerButton button, int playerID) const
 
 	switch (button)
 	{
-	case kaas::ControllerButton::ButtonA:
+	case ControllerButton::ButtonA:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_A)
 			return true;
 		break;
-	case kaas::ControllerButton::ButtonB:
+	case ControllerButton::ButtonB:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_B)
 			return true;
 		break;
-	case kaas::ControllerButton::ButtonX:
+	case ControllerButton::ButtonX:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_X)
 			return true;
 		break;
-	case kaas::ControllerButton::ButtonY:
+	case ControllerButton::ButtonY:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_Y)
 			return true;
-	case kaas::ControllerButton::DPAD_LEFT:
+	case ControllerButton::DPAD_LEFT:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT)
 			return true;
-	case kaas::ControllerButton::DPAD_RIGHT:
+	case ControllerButton::DPAD_RIGHT:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT)
 			return true;
-	case kaas::ControllerButton::DPAD_UP:
+	case ControllerButton::DPAD_UP:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP)
 			return true;
-	case kaas::ControllerButton::DPAD_DOWN:
+	case ControllerButton::DPAD_DOWN:
 		if (state.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN)
 			return true;
 		break;
@@ -123,16 +123,16 @@ bool kaas::InputManager::CheckPressingState(ControllerAction& button)
 {
 	switch (button.state)
 	{
-	case kaas::PressingState::buttonPressed:
+	case PressingState::buttonPressed:
 		return true;
 		break;
-	case kaas::PressingState::buttonDown:
+	case PressingState::buttonDown:
 		if (!button.isDown)
 		{
 			return true;
 		}
 		break;
-	case kaas::PressingState::ThumbStick:
+	case PressingState::ThumbStick:
 
 		break;
 	}

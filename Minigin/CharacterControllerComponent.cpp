@@ -1,11 +1,17 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "Subject.h"
 #include "Timer.h"
-#include "Components.h"
 #include <glm.hpp>
 #include <math.h>
+#include "TransformComponent.h"
+#include "LevelComponent.h"
+#include "TextureComponent.h"
+#include "CoilyComponent.h"
+#include "CharacterControllerComponent.h"
+#include "AudioManager.h"
+#include "AudioLocator.h"
 
-kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGameObject, LevelComponent* pLevel, TileAffection affectsTiles, bool diesByFall, bool canJumpOff)
+CharacterControllerComponent::CharacterControllerComponent(kaas::GameObject* pGameObject, LevelComponent* pLevel, TileAffection affectsTiles, bool diesByFall, bool canJumpOff)
 	:BaseComponent{ pGameObject }
 	,m_CurrentTileID{0}
 	,m_CurrentTargetID{-1}
@@ -20,7 +26,7 @@ kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGa
 	,m_Offset{15.0f}
 	,m_MovementSpeed{4.0f}
 {
-	m_pTransform = pGameObject->GetComponent<TransformComponent>();
+	m_pTransform = pGameObject->GetComponent<kaas::TransformComponent>();
 
 	if (!m_pTransform)
 		std::cout << "Failed to find TransformComponent on gameObject.\n";
@@ -31,13 +37,13 @@ kaas::CharacterControllerComponent::CharacterControllerComponent(GameObject* pGa
 	}
 }
 
-void kaas::CharacterControllerComponent::Update()
+void CharacterControllerComponent::Update()
 {
 	if (m_IsMoving)
 	{
 		glm::vec2 movement{};
 
-		movement = (m_pTransform->GetPosition() + (m_TargetPos - m_pTransform->GetPosition()) * Timer::GetInstance().GetDeltaTime() * m_MovementSpeed);
+		movement = (m_pTransform->GetPosition() + (m_TargetPos - m_pTransform->GetPosition()) * kaas::Timer::GetInstance().GetDeltaTime() * m_MovementSpeed);
 
 		if (glm::length(m_TargetPos - movement) < 3.0f)
 		{
@@ -48,7 +54,7 @@ void kaas::CharacterControllerComponent::Update()
 				m_IsMoving = false;
 				m_CurrentTileID = m_CurrentTargetID;
 
-				if (m_TileAffection != TileAffection::nothing) 
+				if (m_TileAffection != TileAffection::nothing)
 				{
 					m_pLevel->SetTileState(m_CurrentTileID, m_TileAffection);
 				}
@@ -80,6 +86,9 @@ void kaas::CharacterControllerComponent::Update()
 						m_CurrentRow = 1;
 						m_IsMoving = true;
 						m_IsOnDisc = true;
+
+						kaas::AudioManager* manager = static_cast<kaas::AudioManager*>(kaas::AudioLocator::getAudio());
+						manager->AddRequest(2, 19, 0);
 					}
 					else
 					{
@@ -117,7 +126,7 @@ void kaas::CharacterControllerComponent::Update()
 	}
 }
 
-void kaas::CharacterControllerComponent::SetTarget(int direction)
+void CharacterControllerComponent::SetTarget(int direction)
 {
 	if (!m_IsMoving)
 	{
@@ -140,6 +149,7 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		case int(MovementDirections::UggWrongWayLeft) :
 			newTileID = m_CurrentTileID - 1;
 			break;
+
 		case int(MovementDirections::UggWrongWayRight) :
 			newTileID = m_CurrentTileID  + 1;
 			break;
@@ -269,10 +279,13 @@ void kaas::CharacterControllerComponent::SetTarget(int direction)
 		m_TargetPos = m_pLevel->GetTilePos(m_CurrentTargetID);
 
 		m_IsMoving = true;
+
+		kaas::AudioManager* manager = static_cast<kaas::AudioManager*>(kaas::AudioLocator::getAudio());
+		manager->AddRequest(0, 19, 0);
 	}	
 }
 
-void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
+void CharacterControllerComponent::SetTargetByID(int tileID)
 {
 	m_CurrentTargetID = tileID;
 	m_CurrentRow = int(ceil((-1 + sqrt(1 + 8 * (tileID + 1))) / 2));
@@ -281,32 +294,32 @@ void kaas::CharacterControllerComponent::SetTargetByID(int tileID)
 	m_IsMoving = true;
 }
 
-void kaas::CharacterControllerComponent::KillCharacter()
+void CharacterControllerComponent::KillCharacter()
 {
 	m_pGameObject->SetActive(false);
 }
 
-void kaas::CharacterControllerComponent::LoseLife()
+void CharacterControllerComponent::LoseLife()
 {
 	m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::LoseLife);
 }
 
-void kaas::CharacterControllerComponent::FireEvent(Event event)
+void CharacterControllerComponent::FireEvent(Event event)
 {
 	m_pGameObject->GetSubject()->notify(*m_pGameObject, event);
 }
 
-int kaas::CharacterControllerComponent::GetCurrentRow() const
+int CharacterControllerComponent::GetCurrentRow() const
 {
 	return m_CurrentRow;
 }
 
-int kaas::CharacterControllerComponent::GetCurrentID() const
+int CharacterControllerComponent::GetCurrentID() const
 {
 	return m_CurrentTileID;
 }
 
-void kaas::CharacterControllerComponent::PrepareOtherModes(GameObject* pPlayerTwo, bool modeIsCoop)
+void CharacterControllerComponent::PrepareOtherModes(kaas::GameObject* pPlayerTwo, bool modeIsCoop)
 {
 	if (modeIsCoop)
 	{
@@ -316,10 +329,10 @@ void kaas::CharacterControllerComponent::PrepareOtherModes(GameObject* pPlayerTw
 		m_pTransform->SetPosition(pos);
 		
 		//Player 2
-		new TextureComponent{pPlayerTwo, "../Data/QBert.png"};
+		new kaas::TextureComponent{pPlayerTwo, "../Data/QBert.png"};
 		pos = m_pLevel->GetTilePos(27);
 		m_CurrentRow = 7;
-		pPlayerTwo->GetComponent<TransformComponent>()->SetPosition(pos);
+		pPlayerTwo->GetComponent<kaas::TransformComponent>()->SetPosition(pos);
 	}
 	else 
 	{

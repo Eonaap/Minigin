@@ -5,89 +5,103 @@
 namespace kaas 
 {
 	class Command;
-
-	enum class Event {
-		LoseLife,
-		ColorChange,
-		Coilydefeat,
-		DiscRemained,
-		CatchSlickSam
-	};
-
-	enum class TileStates
-	{
-		standard,
-		target,
-		intermediate
-	};
-
-	struct Tile
-	{
-		glm::vec2 pos;
-		TileStates tileState = TileStates{ TileStates::standard };
-	};
-
-	struct Disc
-	{
-		glm::vec2 pos;
-		bool InUse;
-		int tileConnectionID;
-		int level = -1;
-	};
-
-	struct Rect 
-	{
-		int x;
-		int y;
-		int w;
-		int h;
-	};
-
-	enum class MovementDirections
-	{
-		topLeft,
-		topRight,
-		bottomLeft,
-		bottomRight,
-		UggWrongWayLeft,
-		UggWrongWayRight
-	};
-
-	enum class TileAffection
-	{
-		nothing,
-		always,
-		onlyActive
-	};
-
-	enum class ControllerButton
-	{
-		ButtonA,
-		ButtonB,
-		ButtonX,
-		ButtonY,
-		DPAD_LEFT,
-		DPAD_RIGHT,
-		DPAD_UP,
-		DPAD_DOWN,
-		RightThumbStick,
-		LeftThumbStick
-	};
-
-	enum class PressingState
-	{
-		buttonPressed,
-		buttonUp,
-		buttonDown,
-		ThumbStick
-	};
-
-	struct ControllerAction
-	{
-		ControllerButton button{};
-		SDL_KeyCode keyboardButton{};
-		Command* command{};
-		PressingState state{};
-		bool isDown{};
-	};
 }
+
+enum class enemieTypes
+{
+	SlickSam,
+	UggWrongway,
+	Coily
+};
+
+struct EnemieData
+{
+	enemieTypes type;
+	float spawnTime;
+	int level;
+};
+
+enum class Event {
+	LoseLife,
+	ColorChange,
+	Coilydefeat,
+	DiscRemained,
+	CatchSlickSam
+};
+
+enum class TileStates
+{
+	standard,
+	target,
+	intermediate
+};
+
+struct Tile
+{
+	glm::vec2 pos;
+	TileStates tileState = TileStates{ TileStates::standard };
+};
+
+struct Disc
+{
+	glm::vec2 pos;
+	bool InUse;
+	int tileConnectionID;
+	int level = -1;
+};
+
+struct Rect
+{
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
+enum class MovementDirections
+{
+	topLeft,
+	topRight,
+	bottomLeft,
+	bottomRight,
+	UggWrongWayLeft,
+	UggWrongWayRight
+};
+
+enum class TileAffection
+{
+	nothing,
+	always,
+	onlyActive
+};
+
+enum class ControllerButton
+{
+	ButtonA,
+	ButtonB,
+	ButtonX,
+	ButtonY,
+	DPAD_LEFT,
+	DPAD_RIGHT,
+	DPAD_UP,
+	DPAD_DOWN,
+	RightThumbStick,
+	LeftThumbStick
+};
+
+enum class PressingState
+{
+	buttonPressed,
+	buttonUp,
+	buttonDown,
+	ThumbStick
+};
+
+struct ControllerAction
+{
+	ControllerButton button{};
+	SDL_KeyCode keyboardButton{};
+	kaas::Command* command{};
+	PressingState state{};
+	bool isDown{};
+};

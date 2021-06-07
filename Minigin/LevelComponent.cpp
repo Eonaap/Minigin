@@ -1,6 +1,4 @@
-#include "MiniginPCH.h"
-#include "LevelComponent.h"
-#include "TextComponent.h"
+#include "QBertGamePCH.h"
 #include "Texture2D.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -13,9 +11,10 @@
 #include "Structs.h"
 #include <fstream>
 #include <string>
+#include "Components.h"
 
 using namespace rapidjson;
-kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelFilePath, std::string tileTexturePath, std::string discTexturePath, glm::vec2 tileSize, glm::vec2 startLocation)
+LevelComponent::LevelComponent(kaas::GameObject* pGameObject, std::string levelFilePath, std::string tileTexturePath, std::string discTexturePath, glm::vec2 tileSize, glm::vec2 startLocation)
 	:BaseComponent{pGameObject}
 	,m_TileSize{tileSize}
 	,m_StartLocation{startLocation}
@@ -27,9 +26,9 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 	,m_DiscMovementSpeed{ 4.0f }
 	,m_DiscOffset{ glm::vec2{45.0f, 15.0f} }
 {
-	m_pTexture = ResourceManager::GetInstance().LoadTexture(tileTexturePath);
-	m_pDiscTexture = ResourceManager::GetInstance().LoadTexture(discTexturePath);
-	m_pLevelText = pGameObject->GetComponent<TextComponent>();
+	m_pTexture = kaas::ResourceManager::GetInstance().LoadTexture(tileTexturePath);
+	m_pDiscTexture = kaas::ResourceManager::GetInstance().LoadTexture(discTexturePath);
+	m_pLevelText = pGameObject->GetComponent<kaas::TextComponent>();
 
 	if (!m_pLevelText)
 	{
@@ -98,7 +97,7 @@ kaas::LevelComponent::LevelComponent(GameObject* pGameObject, std::string levelF
 	}
 }
 
-kaas::LevelComponent::~LevelComponent()
+LevelComponent::~LevelComponent()
 {
 	delete m_pTexture;
 	m_pTexture = nullptr;
@@ -110,11 +109,11 @@ kaas::LevelComponent::~LevelComponent()
 	//m_pLevelText = nullptr;
 }
 
-void kaas::LevelComponent::Update()
+void LevelComponent::Update()
 {
 	if (m_DiscResetTimer > 0.0f)
 	{
-		m_DiscResetTimer -= Timer::GetInstance().GetDeltaTime();
+		m_DiscResetTimer -= kaas::Timer::GetInstance().GetDeltaTime();
 
 		if (m_DiscResetTimer < 0.0f)
 		{
@@ -134,7 +133,7 @@ void kaas::LevelComponent::Update()
 		{
 			glm::vec2 movement{};
 
-			movement = (disc.pos + (m_DiscEndLocation - disc.pos) * Timer::GetInstance().GetDeltaTime() * m_DiscMovementSpeed);
+			movement = (disc.pos + (m_DiscEndLocation - disc.pos) * kaas::Timer::GetInstance().GetDeltaTime() * m_DiscMovementSpeed);
 
 			if (glm::length(disc.pos - movement) < 0.2f)
 			{
@@ -152,7 +151,7 @@ void kaas::LevelComponent::Update()
 
 	if (m_ResetTimer > 0.0f) 
 	{
-		m_ResetTimer -= Timer::GetInstance().GetDeltaTime();
+		m_ResetTimer -= kaas::Timer::GetInstance().GetDeltaTime();
 
 		if (m_ResetTimer <= 0.0f)
 		{
@@ -174,7 +173,7 @@ void kaas::LevelComponent::Update()
 					else
 					{
 						m_LevelCompleted = true;
-						SceneManager::GetInstance().SetActiveScene("EndMenu");
+						kaas::SceneManager::GetInstance().SetActiveScene("EndMenu");
 						m_pLevelText->SetText("Level Completed!");
 					}
 				}
@@ -183,7 +182,7 @@ void kaas::LevelComponent::Update()
 	}
 }
 
-void kaas::LevelComponent::Render() const
+void LevelComponent::Render() const
 {
 	SDL_Rect rsc{}, dst{};
 	for (const Tile& tile : m_pTiles)
@@ -220,12 +219,12 @@ void kaas::LevelComponent::Render() const
 	}
 }
 
-kaas::Tile& kaas::LevelComponent::GetTile(int tileID)
+Tile& LevelComponent::GetTile(int tileID)
 {
 	return m_pTiles[tileID];
 }
 
-void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
+void LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 {
 	switch (m_LevelNumber)
 	{
@@ -304,7 +303,7 @@ void kaas::LevelComponent::SetTileState(int tileID, TileAffection tileAffection)
 	}
 }
 
-void kaas::LevelComponent::ResetScene()
+void LevelComponent::ResetScene()
 {
 	m_ResetTileCounter = int(m_pTiles.size()) - 1;
 
@@ -318,12 +317,12 @@ void kaas::LevelComponent::ResetScene()
 	m_ResetTimer = m_OriginalResetTimer * 2;
 }
 
-bool kaas::LevelComponent::GetLevelFinished()
+bool LevelComponent::GetLevelFinished()
 {
 	return m_TilesLeft == 0;
 }
 
-glm::vec2 kaas::LevelComponent::GetTilePos(int tileID)
+glm::vec2 LevelComponent::GetTilePos(int tileID)
 {
 	//Add the discOffset.y, which is the same as the offset between the pos of the tile and the middle of it
 	glm::vec2 pos{ m_pTiles[tileID].pos };
@@ -331,7 +330,7 @@ glm::vec2 kaas::LevelComponent::GetTilePos(int tileID)
 	return pos;
 }
 
-glm::vec2 kaas::LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
+glm::vec2 LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
 {
 	glm::vec2 pos{};
 	if (tileID <= m_pTiles.size()-1)
@@ -362,12 +361,12 @@ glm::vec2 kaas::LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
 	return pos;
 }
 
-glm::vec2 kaas::LevelComponent::GetDiscEndLocation()
+glm::vec2 LevelComponent::GetDiscEndLocation()
 {
 	return m_DiscEndLocation;
 }
 
-bool kaas::LevelComponent::IsOnDisc(glm::vec2 pos)
+bool LevelComponent::IsOnDisc(glm::vec2 pos)
 {
 	for (Disc& disc : m_pPossibleDiscLocations)
 	{

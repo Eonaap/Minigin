@@ -8,7 +8,6 @@
 #include "CharacterControllerComponent.h"
 #include <glm.hpp>
 
-
 namespace kaas
 {
 	class Command

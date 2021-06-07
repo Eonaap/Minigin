@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "EnemyManagerComponent.h"
 #include <fstream>
 #include <string>
@@ -13,9 +13,8 @@
 #include "UggWrongWayComponent.h"
 #include "TransformComponent.h"
 
-
 using namespace rapidjson;
-kaas::EnemyManagerComponent::EnemyManagerComponent(GameObject* pGameObject, std::string enemyListFilePath, CharacterControllerComponent* pPlayerController)
+EnemyManagerComponent::EnemyManagerComponent(kaas::GameObject* pGameObject, std::string enemyListFilePath, CharacterControllerComponent* pPlayerController)
 	:BaseComponent{pGameObject}
 	,m_PastTime{0.0f}
 	,m_CurrentLevel{0}
@@ -56,18 +55,18 @@ kaas::EnemyManagerComponent::EnemyManagerComponent(GameObject* pGameObject, std:
 		}
 }
 
-kaas::EnemyManagerComponent::~EnemyManagerComponent()
+EnemyManagerComponent::~EnemyManagerComponent()
 {
-	for (GameObject* pGameObject : m_EnemyObjects)
+	for (kaas::GameObject* pGameObject : m_EnemyObjects)
 	{
 		delete pGameObject;
 		pGameObject = nullptr;
 	}
 }
 
-void kaas::EnemyManagerComponent::Update()
+void EnemyManagerComponent::Update()
 {
-	m_PastTime += Timer::GetInstance().GetDeltaTime();
+	m_PastTime += kaas::Timer::GetInstance().GetDeltaTime();
 
 	if (m_LastCheckedEnemy != m_Enemies.size() - 1) 
 	{
@@ -77,53 +76,56 @@ void kaas::EnemyManagerComponent::Update()
 			{
 				case enemieTypes::Coily:
 				{
-					GameObject* pGameObject = new GameObject{};
-					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::nothing, true, true };
-					CoilyComponent* pSlickSlamComp = new CoilyComponent{ pGameObject, pCharacterComponent, m_pPlayerController, this };
-					m_EnemyObjects.push_back(pGameObject);
+					kaas::GameObject* pGameObjectCoily = new kaas::GameObject{};
+					kaas::TransformComponent* pTransformCompCoily = new kaas::TransformComponent{ pGameObjectCoily, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponentCoily = new CharacterControllerComponent{ pGameObjectCoily, m_pLevel, TileAffection::nothing, true, true };
+					CoilyComponent* pCoilyComp = new CoilyComponent{ pGameObjectCoily, pCharacterComponentCoily, m_pPlayerController, this };
+					m_EnemyObjects.push_back(pGameObjectCoily);
+					break;
 				}
-				break;
+					
 				case enemieTypes::SlickSam:
 				{
-					GameObject* pGameObject = new GameObject{};
-					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::onlyActive, true, true };
-					SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObject, pCharacterComponent, m_pPlayerController};
-					m_EnemyObjects.push_back(pGameObject);
+					kaas::GameObject* pGameObjectSlickSam = new kaas::GameObject{};
+					kaas::TransformComponent* pTransformCompSlickSam = new kaas::TransformComponent{ pGameObjectSlickSam, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponentSlickSam = new CharacterControllerComponent{ pGameObjectSlickSam, m_pLevel, TileAffection::onlyActive, true, true };
+					SlickSamControllerComponent* pSlickSlamComp = new SlickSamControllerComponent{ pGameObjectSlickSam, pCharacterComponentSlickSam, m_pPlayerController };
+					m_EnemyObjects.push_back(pGameObjectSlickSam);
 					break;
 				}
+				
 				case enemieTypes::UggWrongway:
 				{
-					GameObject* pGameObject = new GameObject{};
-					TransformComponent* pTransformComp = new TransformComponent{ pGameObject, glm::vec2{0.0f, 0.0f} };
-					CharacterControllerComponent* pCharacterComponent = new CharacterControllerComponent{ pGameObject, m_pLevel, TileAffection::nothing, true, true };
-					UggWrongWayComponent* pUggComp = new UggWrongWayComponent{ pGameObject, pCharacterComponent, m_pPlayerController, this };
-					m_EnemyObjects.push_back(pGameObject);
+					kaas::GameObject* pGameObjectUggWrongWay = new kaas::GameObject{};
+					kaas::TransformComponent* pTransformCompUggWrongWay = new kaas::TransformComponent{ pGameObjectUggWrongWay, glm::vec2{0.0f, 0.0f} };
+					CharacterControllerComponent* pCharacterComponentUggWrongWay = new CharacterControllerComponent{ pGameObjectUggWrongWay, m_pLevel, TileAffection::nothing, true, true };
+					UggWrongWayComponent* pUggComp = new UggWrongWayComponent{ pGameObjectUggWrongWay, pCharacterComponentUggWrongWay, m_pPlayerController, this };
+					m_EnemyObjects.push_back(pGameObjectUggWrongWay);
 					break;
 				}
+					
 			}
 			m_LastCheckedEnemy++;
 		}
 	}
 
-	for (GameObject* pGameObject : m_EnemyObjects)
+	for (kaas::GameObject* pGameObject : m_EnemyObjects)
 	{
 		if (pGameObject->GetActive())
 			pGameObject->Update();
 	}
 }
 
-void kaas::EnemyManagerComponent::Render() const
+void EnemyManagerComponent::Render() const
 {
-	for (GameObject* pGameObject : m_EnemyObjects)
+	for (kaas::GameObject* pGameObject : m_EnemyObjects)
 	{
 		if (pGameObject->GetActive())
 			pGameObject->Render();
 	}
 }
 
-void kaas::EnemyManagerComponent::NextLevel()
+void EnemyManagerComponent::NextLevel()
 {
 	m_PastTime = 0.0f;
 	m_CurrentLevel++;
@@ -141,7 +143,7 @@ void kaas::EnemyManagerComponent::NextLevel()
 	}
 }
 
-void kaas::EnemyManagerComponent::ResetEnemies()
+void EnemyManagerComponent::ResetEnemies()
 {
 	m_PastTime = 0.0f;
 	m_CurrentLevel = 0;

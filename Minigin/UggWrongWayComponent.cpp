@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "UggWrongWayComponent.h"
 #include "CharacterControllerComponent.h"
 #include "EnemyManagerComponent.h"
@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-kaas::UggWrongWayComponent::UggWrongWayComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager)
+UggWrongWayComponent::UggWrongWayComponent(kaas::GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager)
 	:BaseComponent{ pGameObject }
 	, m_pController{ pControllerComponent }
 	,m_pPlayerController{pPlayerController}
 	,m_pEnemyManager{pEnemyManager}
 {
-	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/Ugg.png" };
+	kaas::TextureComponent* pTexture = new kaas::TextureComponent{ pGameObject, "../Data/Ugg.png" };
 
 	/* initialize random seed: */
 	srand(unsigned int(time(NULL)));
@@ -30,7 +30,7 @@ kaas::UggWrongWayComponent::UggWrongWayComponent(GameObject* pGameObject, Charac
 	}
 }
 
-void kaas::UggWrongWayComponent::Update()
+void UggWrongWayComponent::Update()
 {
 	if (m_pController->GetCurrentID() == m_pPlayerController->GetCurrentID())
 	{

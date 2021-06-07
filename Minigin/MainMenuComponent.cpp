@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "MainMenuComponent.h"
 #include "ResourceManager.h"
 #include "Components.h"
@@ -6,8 +6,10 @@
 #include "Renderer.h"
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "AudioLocator.h"
+#include "AudioManager.h"
 
-kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject, GameObject* pPlayerOne, GameObject* pPlayerTwo)
+MainMenuComponent::MainMenuComponent(kaas::GameObject* pGameObject, kaas::GameObject* pPlayerOne, kaas::GameObject* pPlayerTwo)
 	:BaseComponent{pGameObject}
 	,m_ActiveButton{2}
 	,m_pPlayerOne{pPlayerOne}
@@ -15,9 +17,9 @@ kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject, GameObject* 
 	,m_ControllerEnterButton{}
 	,m_ControllerNextButton{}
 {
-	m_pSingleButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/SingleButton.png");
-	m_pCoopButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/CoopButton.png");
-	m_pVersusButtonActive = ResourceManager::GetInstance().LoadTexture("../Data/VersusButton.png");
+	m_pSingleButtonActive = kaas::ResourceManager::GetInstance().LoadTexture("../Data/SingleButton.png");
+	m_pCoopButtonActive = kaas::ResourceManager::GetInstance().LoadTexture("../Data/CoopButton.png");
+	m_pVersusButtonActive = kaas::ResourceManager::GetInstance().LoadTexture("../Data/VersusButton.png");
 
 	m_ControllerEnterButton.button = ControllerButton::ButtonA;
 	m_ControllerEnterButton.state = PressingState::buttonDown;
@@ -26,7 +28,7 @@ kaas::MainMenuComponent::MainMenuComponent(GameObject* pGameObject, GameObject* 
 	m_ControllerNextButton.state = PressingState::buttonDown;
 }
 
-kaas::MainMenuComponent::~MainMenuComponent()
+MainMenuComponent::~MainMenuComponent()
 {
 	delete m_pSingleButtonActive;
 	m_pSingleButtonActive = nullptr;
@@ -38,33 +40,41 @@ kaas::MainMenuComponent::~MainMenuComponent()
 	m_pCoopButtonActive = nullptr;
 }
 
-void kaas::MainMenuComponent::Update()
+void MainMenuComponent::Update()
 {
-	//InputManager::GetInstance().ProcessControllerButton();
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_d) || InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
+
+	if (kaas::InputManager::GetInstance().KeyIsPressed(SDLK_d) || kaas::InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
 		{
 			m_ControllerNextButton.isDown = true;
 			m_ActiveButton++;
 			if (m_ActiveButton > 2)
 				m_ActiveButton = 0;
+
+			kaas::AudioManager* manager = static_cast<kaas::AudioManager*>(kaas::AudioLocator::getAudio());
+			manager->AddRequest(0, 19, 0);
 		}
 
-	if (InputManager::GetInstance().KeyIsPressed(SDLK_RETURN) || InputManager::GetInstance().ProcessControllerButton(m_ControllerEnterButton, 1))
+	if (kaas::InputManager::GetInstance().KeyIsPressed(SDLK_RETURN) || kaas::InputManager::GetInstance().ProcessControllerButton(m_ControllerEnterButton, 1))
 	{
 		switch (m_ActiveButton)
 		{
 		case 1:
+			m_pPlayerTwo->SetActive(true);
 			m_pPlayerOne->GetComponent<CharacterControllerComponent>()->PrepareOtherModes(m_pPlayerTwo, true);
 			break;
 		case 2:
+			m_pPlayerTwo->SetActive(true);
 			m_pPlayerOne->GetComponent<CharacterControllerComponent>()->PrepareOtherModes(m_pPlayerTwo, false);
 			break;
 		}
-		SceneManager::GetInstance().SetActiveScene("Game");
+
+		kaas::AudioManager* manager = static_cast<kaas::AudioManager*>(kaas::AudioLocator::getAudio());
+		manager->AddRequest(1, 19, 0);
+		kaas::SceneManager::GetInstance().SetActiveScene("Game");
 	}
 }
 
-void kaas::MainMenuComponent::Render() const
+void MainMenuComponent::Render() const
 {
 	float x, y, w, h;
 	//Render Single button

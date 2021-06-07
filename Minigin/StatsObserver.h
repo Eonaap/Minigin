@@ -51,22 +51,22 @@ namespace kaas
 					}
 				}
 				break;
-			case kaas::Event::ColorChange:
+			case Event::ColorChange:
 				m_Points += 25;
 				m_pPointsText->SetText(std::to_string(m_Points));
 				m_pPointsTextEndMenu->SetText(std::to_string(m_Points));
 				break;
-			case kaas::Event::Coilydefeat:
+			case Event::Coilydefeat:
 				m_Points += 500;
 				m_pPointsText->SetText(std::to_string(m_Points));
 				m_pPointsTextEndMenu->SetText(std::to_string(m_Points));
 				break;
-			case kaas::Event::DiscRemained:
+			case Event::DiscRemained:
 				m_Points += 50;
 				m_pPointsText->SetText(std::to_string(m_Points));
 				m_pPointsTextEndMenu->SetText(std::to_string(m_Points));
 				break;
-			case kaas::Event::CatchSlickSam:
+			case Event::CatchSlickSam:
 				m_Points += 300;
 				m_pPointsText->SetText(std::to_string(m_Points));
 				m_pPointsTextEndMenu->SetText(std::to_string(m_Points));

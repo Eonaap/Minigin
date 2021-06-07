@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "QBertGamePCH.h"
 #include "CoilyComponent.h"
 #include "CharacterControllerComponent.h"
 #include "EnemyManagerComponent.h"
@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager, bool isAIController)
+CoilyComponent::CoilyComponent(kaas::GameObject* pGameObject, CharacterControllerComponent* pControllerComponent, CharacterControllerComponent* pPlayerController, EnemyManagerComponent* pEnemyManager, bool isAIController)
 	:BaseComponent{pGameObject}
 	,m_pController{pControllerComponent}
 	,m_pPlayerController{pPlayerController}
@@ -14,13 +14,13 @@ kaas::CoilyComponent::CoilyComponent(GameObject* pGameObject, CharacterControlle
 	,m_IsDown{false}
 	,m_IsAIController{isAIController}
 {
-	TextureComponent* pTexture = new TextureComponent{ pGameObject, "../Data/CoilyBall.png" };
+	kaas::TextureComponent* pTexture = new kaas::TextureComponent{ pGameObject, "../Data/CoilyBall.png" };
 
 	/* initialize random seed: */
 	srand(unsigned int(time(NULL)));
 }
 
-void kaas::CoilyComponent::Update()
+void CoilyComponent::Update()
 {
 	if (m_IsDown)
 	{	
@@ -104,7 +104,7 @@ void kaas::CoilyComponent::Update()
 		if (m_pController->GetCurrentRow() == 7)
 		{
 			m_IsDown = true;
-			m_pGameObject->GetComponent<TextureComponent>()->SetTexture("../Data/Coily.png");
+			m_pGameObject->GetComponent<kaas::TextureComponent>()->SetTexture("../Data/Coily.png");
 		}
 	}
 }

@@ -39,7 +39,7 @@ void QBert::SetupScene() const
 		Scene& Endscene = SceneManager::GetInstance().CreateScene("EndMenu");
 
 		//Background
-		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackground, "../Data/EndMenu.png" };
+		kaas::TextureComponent* pBackgroundTexture = new kaas::TextureComponent{ pBackground, "../Data/EndMenu.png" };
 		pBackgroundTexture->SetTextureSize(640, 480);
 		EndMenuComponent* pEndMenuComponent = new EndMenuComponent{ pBackground };
 
@@ -50,7 +50,7 @@ void QBert::SetupScene() const
 	auto& scene = SceneManager::GetInstance().CreateScene("Game");
 
 	auto go = new GameObject{};
-	TextureComponent* textureComp = new TextureComponent{ go, "background.jpg" };
+	kaas::TextureComponent* textureComp = new kaas::TextureComponent{ go, "background.jpg" };
 	scene.Add(go);
 
 	//Create the level object
@@ -64,9 +64,9 @@ void QBert::SetupScene() const
 	pos.y = 100.0f;
 	TransformComponent* transComp4 = new TransformComponent{ QBertObject, pos };
 	TransformComponent* transComp5 = new TransformComponent{ QBertObject2, pos };
-	TextComponent* textComp2 = new TextComponent{ QBertObject, " ", pFont3 };
-	TextComponent* textComp3 = new TextComponent{ QBertObject, "", pFont4 };
-	TextComponent* textComp4 = new TextComponent{ pBackground, "", pFont5 };
+	kaas::TextComponent* textComp2 = new kaas::TextComponent{ QBertObject, " ", pFont3 };
+	kaas::TextComponent* textComp3 = new kaas::TextComponent{ QBertObject, "", pFont4 };
+	kaas::TextComponent* textComp4 = new kaas::TextComponent{ pBackground, "", pFont5 };
 	StatsObserver* pStats = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
 	StatsObserver* pStats2 = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
 	StatsObserver* pStats3 = new StatsObserver{ 3, textComp2, textComp3, textComp4 };
@@ -77,14 +77,14 @@ void QBert::SetupScene() const
 	pos.x = 25.0f;
 	pos.y = 50.0f;
 	TransformComponent* transComp3 = new TransformComponent{ LevelObject, pos };
-	TextComponent* pLevelTextComponent = new TextComponent{ LevelObject, "Level 1", pFont2 };
+	kaas::TextComponent* pLevelTextComponent = new kaas::TextComponent{ LevelObject, "Level 1", pFont2 };
 	LevelComponent* pLevelComponent = new LevelComponent{ LevelObject, "../Data/LevelDataScaled.json" , "../Data/Tiles.png", "../Data/Disc.png", glm::vec2{50, 55}, glm::vec2{275, 70} };
 	scene.Add(LevelObject);
 	
 	//Create the player
 	{
 		CharacterControllerComponent* pCharacterController = new CharacterControllerComponent{ QBertObject, pLevelComponent, TileAffection::always };
-		TextureComponent* pCharacterTextureComp = new TextureComponent{ QBertObject, "../Data/QBert.png" };
+		kaas::TextureComponent* pCharacterTextureComp = new kaas::TextureComponent{ QBertObject, "../Data/QBert.png" };
 		QBertObject->GetSubject()->AddObserver(pStats2);
 		InputComponent* pInputComponent = new InputComponent{ QBertObject, 1 };
 
@@ -112,12 +112,16 @@ void QBert::SetupScene() const
 		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_r, new MoveTopLeftCommand{}, PressingState::buttonDown, false });
 		pInputComponent->AddAction(ControllerAction{ ControllerButton::LeftThumbStick, SDLK_t, new MoveTopRightCommand{}, PressingState::buttonDown, false });
 		scene.Add(QBertObject2);
+
+		QBertObject2->SetActive(false);
 	}
 
 	//Create the audioManager in the audioLocator and add 2 sounds
 	AudioLocator::provide(new AudioManager());
-	AudioLocator::getAudio()->AddSound("../Data/Music.wav");
-	AudioLocator::getAudio()->AddSound("../Data/DerpNugget.wav");
+	AudioLocator::getAudio()->AddSound("../Data/QBertJump.wav");
+	AudioLocator::getAudio()->AddSound("../Data/LevelIntro.wav");
+	AudioLocator::getAudio()->AddSound("../Data/Disk.wav");
+	AudioLocator::getAudio()->AddSound("../Data/LevelCompleted.wav");
 
 	//Create Main menu scene
 	{
@@ -125,7 +129,7 @@ void QBert::SetupScene() const
 
 		//Background
 		GameObject* pBackgroundMainMenu = new GameObject();
-		TextureComponent* pBackgroundTexture = new TextureComponent{ pBackgroundMainMenu, "../Data/MainMenu.png" };
+		kaas::TextureComponent* pBackgroundTexture = new kaas::TextureComponent{ pBackgroundMainMenu, "../Data/MainMenu.png" };
 		pBackgroundTexture->SetTextureSize(640, 480);
 		MainMenuComponent* pMainMenuComponent = new MainMenuComponent{ pBackgroundMainMenu, QBertObject, QBertObject2 };
 

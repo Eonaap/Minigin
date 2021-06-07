@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{6f9867cd-0a92-4794-843a-22e4975f2940}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QBertGame.cpp">
@@ -24,6 +27,30 @@
     <ClCompile Include="QBertGamePCH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Minigin\CharacterControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\CoilyComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\EndMenuComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\EnemyManagerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\LevelComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\MainMenuComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\SlickSamControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\UggWrongWayComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QBert.h">
@@ -31,6 +58,30 @@
     </ClInclude>
     <ClInclude Include="QBertGamePCH.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\CharacterControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\CoilyComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\EndMenuComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\EnemyManagerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\LevelComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\MainMenuComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\SlickSamControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\UggWrongWayComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
+
 namespace kaas
 {
 	class BaseComponent;
 	class Subject;
-
 	class GameObject final
 	{
 	public:
