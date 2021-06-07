@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseComponent.h"
-#include "FPSComponent.h"
 #include "InputComponent.h"
 #include "TextComponent.h"
 #include "TextureComponent.h"

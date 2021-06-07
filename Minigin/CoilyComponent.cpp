@@ -40,58 +40,15 @@ void CoilyComponent::Update()
 
 		if (playerRow == coilyRow)
 		{
-			if (m_pPlayerController->GetCurrentID() < m_pController->GetCurrentID())
-			{
-				if (coilyRow != 7)
-				{
-					m_pController->SetTarget(int(MovementDirections::bottomLeft));
-				}
-				else
-				{
-					m_pController->SetTarget(int(MovementDirections::topLeft));
-				}
-			}
-			else
-			{
-				if (coilyRow != 7)
-				{
-					m_pController->SetTarget(int(MovementDirections::bottomRight));
-				}
-				else
-				{
-					m_pController->SetTarget(int(MovementDirections::topRight));
-				}
-			}
-				
+			CalculatePlayerOnSameRow(coilyRow);
 		}
-
-		if (playerRow > coilyRow)
+		else if (playerRow > coilyRow)
 		{
-			if (m_pPlayerController->GetCurrentID() - playerRow == m_pController->GetCurrentID())
-				m_pController->SetTarget(int(MovementDirections::bottomLeft));
-			else
-			if (m_pPlayerController->GetCurrentID() - playerRow + 1 == m_pController->GetCurrentID())
-				m_pController->SetTarget(int(MovementDirections::bottomRight));
-			else 
-			{
-				int random = rand() % 2;
-
-				m_pController->SetTarget(2 + random);
-			}
+			CalculatePlayerOnHigherRow(playerRow);
 		}
 		else
 		{
-			if (m_pPlayerController->GetCurrentID() + playerRow + 1 == m_pController->GetCurrentID())
-				m_pController->SetTarget(int(MovementDirections::topLeft));
-			else
-				if (m_pPlayerController->GetCurrentID() + playerRow == m_pController->GetCurrentID())
-					m_pController->SetTarget(int(MovementDirections::topRight));
-				else
-				{
-					int random = rand() % 2;
-
-					m_pController->SetTarget(random);
-				}
+			CalculatePlayerOnLowerRow(playerRow);
 		}
 	}
 	else
@@ -106,5 +63,72 @@ void CoilyComponent::Update()
 			m_IsDown = true;
 			m_pGameObject->GetComponent<kaas::TextureComponent>()->SetTexture("../Data/Coily.png");
 		}
+	}
+}
+
+void CoilyComponent::CalculatePlayerOnSameRow(int coilyRow)
+{
+	if (m_pPlayerController->GetCurrentID() < m_pController->GetCurrentID())
+	{
+		//If coily is not on the last row, jump down
+		if (coilyRow != 7)
+		{
+			m_pController->SetTarget(int(MovementDirections::bottomLeft));
+		}
+		else
+		{
+			m_pController->SetTarget(int(MovementDirections::topLeft));
+		}
+	}
+	else
+	{
+		//If coily is not on the last row, jump down
+		if (coilyRow != 7)
+		{
+			m_pController->SetTarget(int(MovementDirections::bottomRight));
+		}
+		else
+		{
+			m_pController->SetTarget(int(MovementDirections::topRight));
+		}
+	}
+
+}
+
+void CoilyComponent::CalculatePlayerOnHigherRow(int playerRow)
+{
+	int bottomLeftID = m_pPlayerController->GetCurrentID() - playerRow;
+
+	if (bottomLeftID == m_pController->GetCurrentID()) 
+	{
+		m_pController->SetTarget(int(MovementDirections::bottomLeft));
+	}
+	else if (bottomLeftID + 1 == m_pController->GetCurrentID())
+	{
+		m_pController->SetTarget(int(MovementDirections::bottomRight));
+	}
+	else
+	{
+		int random = rand() % 2;
+		m_pController->SetTarget(2 + random);
+	}
+}
+
+void CoilyComponent::CalculatePlayerOnLowerRow(int playerRow)
+{
+	int topLeftID = m_pPlayerController->GetCurrentID() + playerRow + 1;
+
+	if (topLeftID == m_pController->GetCurrentID()) 
+	{
+		m_pController->SetTarget(int(MovementDirections::topLeft));
+	}
+	else if (topLeftID - 1 == m_pController->GetCurrentID()) 
+	{
+		m_pController->SetTarget(int(MovementDirections::topRight));
+	}
+	else
+	{
+		int random = rand() % 2;
+		m_pController->SetTarget(random);
 	}
 }

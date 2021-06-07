@@ -11,7 +11,6 @@ namespace kaas
 
 		void Update() override;
 		void UpdateThumbStick(ControllerAction& action);
-		void Render() const override;
 		void AddAction(ControllerAction action);
 		int GetPlayerID() const;
 	private:

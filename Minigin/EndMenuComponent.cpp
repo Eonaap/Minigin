@@ -60,7 +60,6 @@ void EndMenuComponent::Update()
 			break;
 		case 1:
 			//Quit the application
-			// Default Usage:
 			SDL_Event sdlevent;
 			sdlevent.type = SDL_QUIT;
 
@@ -72,7 +71,7 @@ void EndMenuComponent::Update()
 
 void EndMenuComponent::Render() const
 {
-	float x, y, w, h;
+	float x{}, y{}, w{}, h{};
 	//Render Single button
 
 	switch (m_ActiveButton)

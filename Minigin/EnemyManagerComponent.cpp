@@ -14,7 +14,7 @@
 #include "TransformComponent.h"
 
 using namespace rapidjson;
-EnemyManagerComponent::EnemyManagerComponent(kaas::GameObject* pGameObject, std::string enemyListFilePath, CharacterControllerComponent* pPlayerController)
+EnemyManagerComponent::EnemyManagerComponent(kaas::GameObject* pGameObject, std::string& enemyListFilePath, CharacterControllerComponent* pPlayerController)
 	:BaseComponent{pGameObject}
 	,m_PastTime{0.0f}
 	,m_CurrentLevel{0}
@@ -39,12 +39,12 @@ EnemyManagerComponent::EnemyManagerComponent(kaas::GameObject* pGameObject, std:
 	if (flyingDiscs.IsArray())
 		for (SizeType i = 0; i < flyingDiscs.Size(); i++)
 		{
-			EnemieData enemyData{};
+			EnemyData enemyData{};
 			bool isLeft{};
 			for (Value::ConstMemberIterator itr = flyingDiscs[i].MemberBegin(); itr != flyingDiscs[i].MemberEnd(); ++itr)
 			{
 				if (itr->name == "EnemyType")
-					enemyData.type = enemieTypes(itr->value.GetInt());
+					enemyData.type = EnemyTypes(itr->value.GetInt());
 				if (itr->name == "SpawnTime")
 					enemyData.spawnTime = float(itr->value.GetInt());
 				if (itr->name == "Level")
@@ -74,7 +74,7 @@ void EnemyManagerComponent::Update()
 		{
 			switch (m_Enemies[m_LastCheckedEnemy].type)
 			{
-				case enemieTypes::Coily:
+				case EnemyTypes::Coily:
 				{
 					kaas::GameObject* pGameObjectCoily = new kaas::GameObject{};
 					kaas::TransformComponent* pTransformCompCoily = new kaas::TransformComponent{ pGameObjectCoily, glm::vec2{0.0f, 0.0f} };
@@ -84,7 +84,7 @@ void EnemyManagerComponent::Update()
 					break;
 				}
 					
-				case enemieTypes::SlickSam:
+				case EnemyTypes::SlickSam:
 				{
 					kaas::GameObject* pGameObjectSlickSam = new kaas::GameObject{};
 					kaas::TransformComponent* pTransformCompSlickSam = new kaas::TransformComponent{ pGameObjectSlickSam, glm::vec2{0.0f, 0.0f} };
@@ -94,7 +94,7 @@ void EnemyManagerComponent::Update()
 					break;
 				}
 				
-				case enemieTypes::UggWrongway:
+				case EnemyTypes::UggWrongway:
 				{
 					kaas::GameObject* pGameObjectUggWrongWay = new kaas::GameObject{};
 					kaas::TransformComponent* pTransformCompUggWrongWay = new kaas::TransformComponent{ pGameObjectUggWrongWay, glm::vec2{0.0f, 0.0f} };

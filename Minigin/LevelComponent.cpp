@@ -25,6 +25,8 @@ LevelComponent::LevelComponent(kaas::GameObject* pGameObject, std::string levelF
 	, m_DiscOriginalResetTimer{ 1.0f }
 	,m_DiscMovementSpeed{ 4.0f }
 	,m_DiscOffset{ glm::vec2{45.0f, 15.0f} }
+	,m_ResetTileCounter{0}
+	,m_ResettingScene{false}
 {
 	m_pTexture = kaas::ResourceManager::GetInstance().LoadTexture(tileTexturePath);
 	m_pDiscTexture = kaas::ResourceManager::GetInstance().LoadTexture(discTexturePath);
@@ -74,6 +76,8 @@ LevelComponent::LevelComponent(kaas::GameObject* pGameObject, std::string levelF
 			{
 				Disc disc{};
 				bool isLeft{};
+
+				//for every variable in the object, store it in a disc
 				for (Value::ConstMemberIterator itr = flyingDiscs[i].MemberBegin(); itr != flyingDiscs[i].MemberEnd(); ++itr)
 				{
 					if (itr->name == "tileConnection")
@@ -84,8 +88,7 @@ LevelComponent::LevelComponent(kaas::GameObject* pGameObject, std::string levelF
 						disc.level = itr->value.GetInt();
 				}
 
-				//disc.tileConnectionID = flyingDiscs[i].GetInt();
-				//bool isLeft = flyingDiscs[i].GetBool();
+				//The pos of the disc is on the left side of the texture, so add an extra offset if the disc is on the right
 				disc.pos.x = isLeft ? m_pTiles[disc.tileConnectionID].pos.x - m_DiscOffset.x : m_pTiles[disc.tileConnectionID].pos.x + m_DiscOffset.x + m_DiscOffset.y;
 				disc.pos.y = m_pTiles[disc.tileConnectionID].pos.y + m_DiscOffset.y;
 				m_pPossibleDiscLocations.push_back(disc);
@@ -104,13 +107,11 @@ LevelComponent::~LevelComponent()
 
 	delete m_pDiscTexture;
 	m_pTexture = nullptr;
-
-	//delete m_pLevelText;
-	//m_pLevelText = nullptr;
 }
 
 void LevelComponent::Update()
 {
+	//Let the disc float a second before making it inactive
 	if (m_DiscResetTimer > 0.0f)
 	{
 		m_DiscResetTimer -= kaas::Timer::GetInstance().GetDeltaTime();
@@ -127,19 +128,18 @@ void LevelComponent::Update()
 		}
 	}
 
+	//Update the movement of the discs that are in use
 	for (Disc& disc : m_pPossibleDiscLocations)
 	{
 		if (disc.InUse)
 		{
-			glm::vec2 movement{};
-
-			movement = (disc.pos + (m_DiscEndLocation - disc.pos) * kaas::Timer::GetInstance().GetDeltaTime() * m_DiscMovementSpeed);
+			//Lerp the distance like the player
+			glm::vec2 movement{ (disc.pos + (m_DiscEndLocation - disc.pos) * kaas::Timer::GetInstance().GetDeltaTime() * m_DiscMovementSpeed) };
 
 			if (glm::length(disc.pos - movement) < 0.2f)
 			{
 				disc.pos = m_DiscEndLocation;
 				disc.InUse = false;
-				m_DiscIsMoving = false;
 				m_DiscResetTimer = m_DiscOriginalResetTimer;
 			}
 			else
@@ -149,6 +149,7 @@ void LevelComponent::Update()
 		}
 	}
 
+	//Timer for resetting the level
 	if (m_ResetTimer > 0.0f) 
 	{
 		m_ResetTimer -= kaas::Timer::GetInstance().GetDeltaTime();
@@ -172,9 +173,7 @@ void LevelComponent::Update()
 					}
 					else
 					{
-						m_LevelCompleted = true;
 						kaas::SceneManager::GetInstance().SetActiveScene("EndMenu");
-						m_pLevelText->SetText("Level Completed!");
 					}
 				}
 			}
@@ -188,7 +187,7 @@ void LevelComponent::Render() const
 	for (const Tile& tile : m_pTiles)
 	{
 		rsc.x = static_cast<int>((m_LevelNumber * m_TileSize.x * 3) + m_TileSize.x * int(tile.tileState));
-		rsc.y = static_cast<int>(0);
+		rsc.y = 0;
 		rsc.w = static_cast<int>(m_TileSize.x);
 		rsc.h = static_cast<int>(m_TileSize.y);
 
@@ -204,17 +203,7 @@ void LevelComponent::Render() const
 	{
 		if (disc.level == m_LevelNumber)
 		{
-			rsc.x = static_cast<int>(0.0f);
-			rsc.y = static_cast<int>(0);
-			rsc.w = static_cast<int>(m_TileSize.x);
-			rsc.h = static_cast<int>(m_TileSize.y);
-
-			dst.x = static_cast<int>(disc.pos.x);
-			dst.y = static_cast<int>(disc.pos.y);
-			dst.w = static_cast<int>(35);
-			dst.h = static_cast<int>(22);
-
-			kaas::Renderer::GetInstance().RenderTexture(*m_pDiscTexture, dst, rsc);
+			kaas::Renderer::GetInstance().RenderTexture(*m_pDiscTexture, disc.pos.x, disc.pos.y);
 		}
 	}
 }
@@ -307,7 +296,7 @@ void LevelComponent::ResetScene()
 {
 	m_ResetTileCounter = int(m_pTiles.size()) - 1;
 
-	for (Disc disc : m_pPossibleDiscLocations)
+	for (const Disc& disc : m_pPossibleDiscLocations)
 	{
 		if (disc.level == m_LevelNumber)
 			m_pGameObject->GetSubject()->notify(*m_pGameObject, Event::DiscRemained);
@@ -335,27 +324,29 @@ glm::vec2 LevelComponent::GetVoidPos(int tileID, bool onLeftSide)
 	glm::vec2 pos{};
 	if (tileID <= m_pTiles.size()-1)
 	{
-		pos = m_pTiles[tileID].pos;
-
-		//On the right side, add the offset instead of subtracting + teh offset from the pos being on the left side of the texture
-		pos.x = onLeftSide ? pos.x - m_DiscOffset.x : pos.x + m_DiscOffset.x + m_DiscOffset.y;
-		pos.y += m_DiscOffset.y;
-
+		//If tile has a connection to a disc, return that position
 		for (const Disc& disc : m_pPossibleDiscLocations)
 		{
 			if (disc.tileConnectionID == tileID && disc.level == m_LevelNumber)
 			{
-				pos = disc.pos;
+				return disc.pos;
 			}
 		}
 
+		pos = m_pTiles[tileID].pos;
+
+		//On the right side, add the offset plus the offset from the pos being on the left side of the texture
+		pos.x = onLeftSide ? pos.x - m_DiscOffset.x : pos.x + m_DiscOffset.x + m_DiscOffset.y;
+		pos.y += m_DiscOffset.y;
 	}
 	else
 	{
-		//Get the pos of the tileon the last row
+		//Get the pos under the pyramid
 		pos = m_pTiles[tileID - 7].pos;
 		pos.x += m_DiscOffset.x;
 		pos.y += m_DiscOffset.y;
+
+		return pos;
 	}
 
 	return pos;
@@ -372,7 +363,6 @@ bool LevelComponent::IsOnDisc(glm::vec2 pos)
 	{
 		if (disc.pos == pos && disc.level == m_LevelNumber)
 		{
-			disc.pos;
 			disc.InUse = true;
 			return true;
 		}

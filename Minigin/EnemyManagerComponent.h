@@ -7,7 +7,7 @@ class CharacterControllerComponent;
 class EnemyManagerComponent : public kaas::BaseComponent
 {
 public:
-	EnemyManagerComponent(kaas::GameObject* pGameObject, std::string enemyListFilePath, CharacterControllerComponent* pPlayerController);
+	EnemyManagerComponent(kaas::GameObject* pGameObject, std::string& enemyListFilePath, CharacterControllerComponent* pPlayerController);
 	~EnemyManagerComponent();
 	void Update() override;
 	void Render() const override;
@@ -15,7 +15,7 @@ public:
 	void ResetEnemies();
 private:
 	LevelComponent* m_pLevel;
-	std::vector<EnemieData> m_Enemies;
+	std::vector<EnemyData> m_Enemies;
 	std::vector<kaas::GameObject*> m_EnemyObjects;
 	CharacterControllerComponent* m_pPlayerController;
 	float m_PastTime;

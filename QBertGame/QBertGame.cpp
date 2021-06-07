@@ -1,6 +1,8 @@
 #include "QBertGamePCH.h"
 #include "QBert.h"
+#if DEBUG
 #include "vld.h"
+#endif
 
 int main()
 {

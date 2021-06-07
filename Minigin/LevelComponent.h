@@ -43,7 +43,7 @@ private:
 	glm::vec2 m_TileSize, m_StartLocation, m_DiscOffset, m_DiscEndLocation;
 	Disc m_LeftDisc, m_RightDisc;
 	int m_LevelNumber, m_TilesLeft, m_ResetTileCounter;
-	bool m_ResettingScene, m_LevelCompleted, m_DiscIsMoving;
+	bool m_ResettingScene;
 	float m_ResetTimer, m_OriginalResetTimer, m_DiscMovementSpeed, m_DiscResetTimer, m_DiscOriginalResetTimer;
 };
 	

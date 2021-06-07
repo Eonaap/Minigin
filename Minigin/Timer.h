@@ -9,6 +9,6 @@ namespace kaas
 		float GetDeltaTime() const;
 		void SetDeltaTime(float dT);
 	private:
-		float m_DeltaTime;
+		float m_DeltaTime{};
 	};
 }

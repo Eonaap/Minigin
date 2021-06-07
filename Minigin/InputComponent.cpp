@@ -44,7 +44,7 @@ void kaas::InputComponent::UpdateThumbStick(ControllerAction& action)
 	}
 	else
 	{
-		currentState = InputManager::GetInstance().GetCurrentState();
+		currentState = InputManager::GetInstance().GetCurrentStateP2();
 	}
 	
 	float X = currentState.Gamepad.sThumbRX;
@@ -67,10 +67,6 @@ void kaas::InputComponent::UpdateThumbStick(ControllerAction& action)
 		//Return true
 		action.command->Execute(m_pGameObject, glm::vec2{ X, Y });
 	}
-}
-
-void kaas::InputComponent::Render() const
-{
 }
 
 void kaas::InputComponent::AddAction(ControllerAction action)

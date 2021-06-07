@@ -10,6 +10,10 @@ public:
 
 	void Update() override;
 private:
+
+	void CalculatePlayerOnSameRow(int coilyRow);
+	void CalculatePlayerOnHigherRow(int playerRow);
+	void CalculatePlayerOnLowerRow(int playerRow);
 	CharacterControllerComponent* m_pController;
 	CharacterControllerComponent* m_pPlayerController;
 	EnemyManagerComponent* m_pEnemyManager;

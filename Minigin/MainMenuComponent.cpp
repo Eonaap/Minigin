@@ -42,7 +42,6 @@ MainMenuComponent::~MainMenuComponent()
 
 void MainMenuComponent::Update()
 {
-
 	if (kaas::InputManager::GetInstance().KeyIsPressed(SDLK_d) || kaas::InputManager::GetInstance().ProcessControllerButton(m_ControllerNextButton, 1))
 		{
 			m_ControllerNextButton.isDown = true;
@@ -76,8 +75,7 @@ void MainMenuComponent::Update()
 
 void MainMenuComponent::Render() const
 {
-	float x, y, w, h;
-	//Render Single button
+	float x{}, y{}, w{}, h{};
 
 	switch (m_ActiveButton)
 	{

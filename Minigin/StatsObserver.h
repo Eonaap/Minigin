@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 #include "Subject.h"
 #include "TextComponent.h"
+#include "SceneManager.h"
 
 namespace kaas
 {
@@ -18,16 +19,15 @@ namespace kaas
 
 			m_pPointsText = pPointsText;
 			m_pPointsText->SetText(std::to_string(m_Points));
-			m_pPointsText->SetPosOffset(glm::vec2{ 0.0f, 25.0f });
+			m_pPointsText->SetPosOffset(glm::vec2{ 0.0f, 75.0f });
 
 			m_pPointsTextEndMenu = pPointsTextEndMenu;
 			m_pPointsTextEndMenu->SetText(std::to_string(m_Points));
-			m_pPointsTextEndMenu->SetPosOffset(glm::vec2{ 125.0f, 215.0f });
+			m_pPointsTextEndMenu->SetPosOffset(glm::vec2{ 50.0f, 50.0f });
 		};
 
 		~StatsObserver() 
 		{
-			std::cout << "I'm getting fired\n";
 		}
 
 		void onNotify(const GameObject& gameObject, const Event& eventInfo) override
@@ -47,7 +47,7 @@ namespace kaas
 					else
 					{
 						m_IsAlive = false;
-						m_pHealthText->SetText("You died");
+						SceneManager::GetInstance().SetActiveScene("EndMenu");
 					}
 				}
 				break;
@@ -73,9 +73,6 @@ namespace kaas
 				break;
 			}
 		};
-
-		const bool IsAlive() { return m_IsAlive; };
-		const int& GetHealth() { return m_CurrentHealth; };
 
 	private:
 		int m_MaxHealth, m_CurrentHealth, m_Points;

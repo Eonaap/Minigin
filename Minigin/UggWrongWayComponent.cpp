@@ -17,8 +17,8 @@ UggWrongWayComponent::UggWrongWayComponent(kaas::GameObject* pGameObject, Charac
 	/* initialize random seed: */
 	srand(unsigned int(time(NULL)));
 
-	int random = rand() % 2;
-	if (random == 0)
+
+	if (rand() % 2)
 	{
 		m_pController->SetTargetByID(21);
 		m_GoesToLeftSide = false;
@@ -43,23 +43,18 @@ void UggWrongWayComponent::Update()
 	if (m_GoesToLeftSide)
 	{
 		if (random == 0)
-		{
 			m_pController->SetTarget(int(MovementDirections::topLeft));
-		}
+		
 		else
-		{
 			m_pController->SetTarget(int(MovementDirections::UggWrongWayLeft));
-		}
+		
 	}
 	else
 	{
 		if (random == 0)
-		{
 			m_pController->SetTarget(int(MovementDirections::topRight));
-		}
+		
 		else
-		{
 			m_pController->SetTarget(int(MovementDirections::UggWrongWayRight));
-		}
 	}
 }

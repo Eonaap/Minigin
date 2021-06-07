@@ -7,18 +7,13 @@ namespace kaas
 	class Command;
 }
 
-enum class enemieTypes
+
+//Enum classes
+enum class EnemyTypes
 {
 	SlickSam,
 	UggWrongway,
 	Coily
-};
-
-struct EnemieData
-{
-	enemieTypes type;
-	float spawnTime;
-	int level;
 };
 
 enum class Event {
@@ -34,28 +29,6 @@ enum class TileStates
 	standard,
 	target,
 	intermediate
-};
-
-struct Tile
-{
-	glm::vec2 pos;
-	TileStates tileState = TileStates{ TileStates::standard };
-};
-
-struct Disc
-{
-	glm::vec2 pos;
-	bool InUse;
-	int tileConnectionID;
-	int level = -1;
-};
-
-struct Rect
-{
-	int x;
-	int y;
-	int w;
-	int h;
 };
 
 enum class MovementDirections
@@ -95,6 +68,30 @@ enum class PressingState
 	buttonUp,
 	buttonDown,
 	ThumbStick
+};
+
+
+//Structs
+struct EnemyData
+{
+	EnemyTypes type = EnemyTypes::Coily;
+	float spawnTime;
+	int level;
+};
+
+
+struct Tile
+{
+	glm::vec2 pos{};
+	TileStates tileState = TileStates{ TileStates::standard };
+};
+
+struct Disc
+{
+	glm::vec2 pos{};
+	bool InUse = false;
+	int tileConnectionID = 0;
+	int level = -1;
 };
 
 struct ControllerAction
